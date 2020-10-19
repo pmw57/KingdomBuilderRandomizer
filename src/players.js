@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("./html.js");
 const expansion = require("./expansions/expansion.js");
 
@@ -8,13 +8,21 @@ const players = (function iife() {
         html.init(document);
         data = expansion.init(document, data);
         const expansions = document.querySelector(".sidebar");
+        const content = ".players {padding: 1em; margin: 0 3em; clear: left;}";
         if (!expansions.querySelector(".players")) {
-            const style = html.create("style", {content: ".players {padding: 1em; margin: 0 3em; clear: left;}"});
+            const style = html.create("style", {content});
             const p = html.create("p", {
                 class: "players",
                 content: "PLAYERS"
             });
-            const input = html.create("input", {type: "number", id: "p", value: "5", size: "2", min: "1", max: "5"});
+            const input = html.create("input", {
+                type: "number",
+                id: "p",
+                value: "5",
+                size: "2",
+                min: "1",
+                max: "5"
+            });
             const space = document.createTextNode(" ");
             const label = html.create("label", {id: "pc"});
             expansions.appendChild(style);

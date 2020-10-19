@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const storageModule = (function iife() {
     "use strict";
     let document;
@@ -27,7 +27,8 @@ const storageModule = (function iife() {
         }
         function updateRadio(radioField) {
             const id = storage[radioField.name];
-            const radioFields = document.querySelectorAll(`[name=${radioField.name}]`);
+            const radioSelector = `[name=${radioField.name}]`;
+            const radioFields = document.querySelectorAll(radioSelector);
             radioFields.forEach(function (field) {
                 if (field.id === id) {
                     field.checked = true;

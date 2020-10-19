@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const expansion = require("./expansion.js");
 
 const capitol = (function iife() {
@@ -37,9 +37,11 @@ const capitol = (function iife() {
             return minis.capitol === "rules";
         }
         function pickCapitolDirection() {
-            return Math.random() < 0.5
+            return (
+                Math.random() < 0.5
                 ? "N"
-                : "S";
+                : "S"
+            );
         }
         function updateCapitol(data, boardData) {
             const canUseCapitol = hasTwoCastles(boardData.name, data);

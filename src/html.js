@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = (function iife() {
     "use strict";
     let document;

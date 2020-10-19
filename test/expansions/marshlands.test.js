@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").expect;
 const boards = require("../../src/boards.js");
@@ -23,6 +23,7 @@ describe("Marshlands", function () {
         };
     });
     describe("inits", function () {
+        // TODO tidy
         function removeEl(selector) {
             const el = document.querySelector(selector);
             el.parentNode.removeChild(el);
@@ -60,6 +61,7 @@ describe("Marshlands", function () {
         });
     });
     describe("update", function () {
+        // TODO tidy
         it("passes data to through the update", function () {
             let presentData = {test: "successful test"};
             presentData = marshlands.update(data, presentData);
@@ -67,6 +69,7 @@ describe("Marshlands", function () {
         });
     });
     describe("presenter", function () {
+        // TODO tidy
         it("passes viewData through without changes", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
@@ -75,6 +78,7 @@ describe("Marshlands", function () {
         });
     });
     describe("view", function () {
+        // TODO tidy
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = marshlands.view(viewData, data.fields);

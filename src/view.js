@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const view = (function makeView() {
     "use strict";
     function renderView(parts, presentData) {

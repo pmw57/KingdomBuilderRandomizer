@@ -1,20 +1,36 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("./html.js");
 const cards = require("./cards.js");
 
 const boards = (function () {
     "use strict";
-    const boardNames = ["Oracle", "Farm", "Oasis", "Tower", "Tavern", "Barn", "Harbor", "Paddock"];
+    const boardNames = [
+        "Oracle",
+        "Farm",
+        "Oasis",
+        "Tower",
+        "Tavern",
+        "Barn",
+        "Harbor",
+        "Paddock"
+    ];
     function initBoards(document, data) {
+        function createBoard(id) {
+            return html.create("output", {
+                type: "text",
+                id,
+                size: "25"
+            });
+        }
         function addBoardsHTML(data) {
             const content = document.querySelector(".content");
             if (!document.querySelector(".boards")) {
                 const boardsContainer = html.create("div", {class: "boards"});
                 const heading = html.create("h3", {content: "MAP"});
-                const board0 = html.create("output", {type: "text", id: "b0", size: "25"});
-                const board1 = html.create("output", {type: "text", id: "b1", size: "25"});
-                const board2 = html.create("output", {type: "text", id: "b2", size: "25"});
-                const board3 = html.create("output", {type: "text", id: "b3", size: "25"});
+                const board0 = createBoard("b0");
+                const board1 = createBoard("b1");
+                const board2 = createBoard("b2");
+                const board3 = createBoard("b3");
                 boardsContainer.appendChild(heading);
                 boardsContainer.appendChild(board0);
                 boardsContainer.appendChild(board1);
@@ -61,7 +77,7 @@ const boards = (function () {
         function getBoardsOfType(boardsList, type) {
             const boardsOfType = boardsList[type];
             const mappedBoards = boardsOfType.map(
-                (name) => ({name: name, type: type})
+                (name) => ({name, type})
             );
             return mappedBoards;
         }

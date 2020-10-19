@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, it} = require("mocha");
 const expect = require("chai").expect;
 const presenter = require("../src/presenter.js");
@@ -10,6 +10,7 @@ const {document} = new JSDOM(docpage).window;
 describe("Presenter", function () {
     "use strict";
     describe("presents boards", function () {
+        // TODO tidy
         it("updates from a list of parts", function () {
             presenter.init();
             const partStub = {

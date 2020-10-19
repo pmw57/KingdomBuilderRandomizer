@@ -13,6 +13,7 @@ describe("Cards", function () {
             return 0;
         };
     });
+    // TODO tidy
     it("shuffles the provided cards", function () {
         const cachedRandom = Math.random;
         Math.random = randomTestStub;

@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const cards = (function () {
     "use strict";
     function knuthShuffle(arr) {

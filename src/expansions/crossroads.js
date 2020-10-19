@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("../html.js");
 const cards = require("../cards.js");
 const boards = require("../boards.js");
@@ -8,14 +8,31 @@ const expansion = require("./expansion.js");
 const crossroads = (function iife() {
     "use strict";
     const href = "http://boardgamegeek.com/boardgame/137396";
-    const locations = "Lighthouse/Forester's Lodge, Barracks/Crossroads, City Hall/Fort, Monastery/Wagon";
-    const boardNames = ["Lighthouse", "Barracks", "Monastery", "City Hall"];
-    const taskNames = ["Home country", "Fortress", "Road", "Place of refuge", "Advance", "Compass point"];
+    const locations = [
+        "Lighthouse/Forester's Lodge",
+        "Barracks/Crossroads",
+        "City Hall/Fort",
+        "Monastery/Wagon"
+    ].join(", ");
+    const boardNames = [
+        "Lighthouse",
+        "Barracks",
+        "Monastery",
+        "City Hall"
+    ];
+    const taskNames = [
+        "Home country",
+        "Fortress",
+        "Road",
+        "Place of refuge",
+        "Advance",
+        "Compass point"
+    ];
     function initCrossroads(document, data) {
         function createTask(id) {
             const task = html.create("output", {
                 type: "text",
-                id: id
+                id
             });
             return task;
         }
@@ -162,8 +179,9 @@ const crossroads = (function iife() {
                 return;
             }
             viewData.tasks.forEach(function updateField(task, index) {
+                const className = task && task.className;
                 fields["task" + index].value = task && task.value;
-                fields["task" + index].setAttribute("class", task && task.className);
+                fields["task" + index].setAttribute("class", className);
             });
         }
         viewTasks(viewData, fields);

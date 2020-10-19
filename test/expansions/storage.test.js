@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").expect;
 const storage = require("../../src/storage.js");
@@ -27,21 +27,27 @@ describe("Storage", function () {
         };
     });
     describe("init", function () {
+        // TODO tidy
         it("can init", function () {
-            expect(() => storage.init(document)).to.throw("localStorage is not available");
+            expect(
+                () => storage.init(document)
+            ).to.throw("localStorage is not available");
         });
     });
     describe("get", function () {
+        // TODO tidy
         it("can get", function () {
             expect(() => storage.get("testKey")).to.throw();
         });
     });
     describe("set", function () {
+        // TODO tidy
         it("can set", function () {
             expect(() => storage.set("testKey")).to.throw();
         });
     });
     describe("update", function () {
+        // TODO tidy
         it("throws an error when no storage", function () {
             storage.init({defaultView: {}});
             expect(() => storage.update()).to.throw("No storage");
@@ -77,6 +83,7 @@ describe("Storage", function () {
         });
     });
     describe("monitor", function () {
+        // TODO tidy
         it("can monitor text input", function () {
             let data = {};
             data = boards.init(document, data);

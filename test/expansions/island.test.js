@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
 const boards = require("../../src/boards.js");
@@ -31,6 +31,7 @@ describe("Island", function () {
         };
     });
     describe("errors", function () {
+        // TODO tidy
         it("throws an error when the boards section is missing", function () {
             data = {};
             const viewFn = () => island.init(document, data);
@@ -38,6 +39,7 @@ describe("Island", function () {
         });
     });
     describe("init", function () {
+        // TODO tidy
         it("adds island HTML to the page", function () {
             if (document.querySelector("#i0")) {
                 document.querySelector("#i0").remove();
@@ -62,10 +64,19 @@ describe("Island", function () {
             data = boards.init(document, data);
             data = island.init(document, data);
             expect(data.fields.island.parentNode).to.not.equal(undefined);
+        });
+        it("can init multiple times", function () {
+            data = {};
+            data = boards.init(document, data);
+            data = island.init(document, data);
+            data = {};
+            data = boards.init(document, data);
+            data = island.init(document, data);
             expect(data.fields.i0.parentNode).to.not.equal(undefined);
         });
     });
     describe("is water board", function () {
+        // TODO tidy
         it("checks if board has water-based actions", function () {
             data = boards.init(document, data);
             data = island.init(document, data);
@@ -74,6 +85,7 @@ describe("Island", function () {
         });
     });
     describe("update when rules are active", function () {
+        // TODO tidy
         let presentData;
         let cacheRandom;
         beforeEach(function () {
@@ -138,6 +150,7 @@ describe("Island", function () {
         }
     }
     describe("update when odds are active", function () {
+        // TODO tidy
         let presentData;
         let cacheRandom;
         beforeEach(function () {
@@ -184,6 +197,7 @@ describe("Island", function () {
         });
     });
     describe("island presenter", function () {
+        // TODO tidy
         let islandUpdate;
         beforeEach(function () {
             islandUpdate = island.update;
@@ -235,6 +249,7 @@ describe("Island", function () {
         });
     });
     describe("view", function () {
+        // TODO tidy
         it("passes viewData through without changes", function () {
             boards.init(document, data);
             island.init(document, data);

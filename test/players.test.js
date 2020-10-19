@@ -14,7 +14,8 @@ describe("Players", function () {
         document = new JSDOM(docpage).window.document;
     });
     describe("init", function () {
-        it("can init multiple times", function () {
+        // TODO tidy
+        it("can init multiple times without ruining the player count input", function () {
             let data = {};
             data = boards.init(document, data);
             data = players.init(document, data);
@@ -25,6 +26,7 @@ describe("Players", function () {
         });
     });
     describe("update", function () {
+        // TODO tidy
         let data;
         let presentData;
         let cacheRandom;
@@ -73,6 +75,7 @@ describe("Players", function () {
         });
     });
     describe("render", function () {
+        // TODO tidy
         it("passes through viewData", function () {
             const presentData = {};
             let viewData = {test: "successful test"};
@@ -89,6 +92,7 @@ describe("Players", function () {
         });
     });
     describe("view", function () {
+        // TODO tidy
         let data;
         beforeEach(function () {
             data = {};

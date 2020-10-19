@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("../html.js");
 const boards = require("../boards.js");
 const expansion = require("./expansion.js");

@@ -1,11 +1,22 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("./html.js");
 const cards = require("./cards.js");
 const boards = require("./boards.js");
 
 const goals = (function iife() {
     "use strict";
-    const goalNames = ["Fishermen", "Miners", "Merchants", "Workers", "Discoverers", "Knights", "Hermits", "Lords", "Citizens", "Farmers"];
+    const goalNames = [
+        "Fishermen",
+        "Miners",
+        "Merchants",
+        "Workers",
+        "Discoverers",
+        "Knights",
+        "Hermits",
+        "Lords",
+        "Citizens",
+        "Farmers"
+    ];
     function initGoals(document, data) {
         function insertAfter(before, after) {
             const parent = before.parentNode;
@@ -42,11 +53,13 @@ const goals = (function iife() {
     }
     function updateGoals(data, presentData, document) {
         function getGoals(activeTypes, data) {
-            const activeGoals = Object.keys(data.contents.goals).filter(function goalTypes(goalType) {
+            const goalTypes = Object.keys(data.contents.goals);
+            const activeGoals = goalTypes.filter(function goalTypes(goalType) {
                 return activeTypes.includes(goalType);
             });
             const joined = activeGoals.reduce(function (goalCards, goalType) {
-                const goalList = data.contents.goals[goalType].map(function (name) {
+                const goalsOfType = data.contents.goals[goalType];
+                const goalList = goalsOfType.map(function (name) {
                     return {name, type: goalType};
                 });
                 return goalCards.concat(goalList);

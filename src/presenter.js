@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const presenter = (function makePresenter() {
     "use strict";
     function initPresenter(data) {

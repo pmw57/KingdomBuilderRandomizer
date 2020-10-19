@@ -30,6 +30,7 @@ describe("Goals", function () {
         };
     });
     describe("errors", function () {
+        // TODO tidy
         it("throws an error when no document", function () {
             data = {contents: {}};
             const noDocument = undefined;
@@ -37,6 +38,7 @@ describe("Goals", function () {
         });
     });
     describe("init", function () {
+        // TODO tidy
         it("adds goals HTML to the page", function () {
             if (document.querySelector(".goals")) {
                 document.querySelector(".goals").remove();
@@ -65,7 +67,7 @@ describe("Goals", function () {
             data = goals.init(document, data);
             expect(data.contents).to.not.equal(undefined);
         });
-        it("can init multiple times", function () {
+        it("can init multiple times without ruining the goals input", function () {
             data = {};
             data = boards.init(document, data);
             data = goals.init(document, data);
@@ -76,6 +78,7 @@ describe("Goals", function () {
         });
     });
     describe("update", function () {
+        // TODO tidy
         let cacheShuffle;
         beforeEach(function () {
             // replace shuffle with reverse for reliable testing
@@ -105,6 +108,7 @@ describe("Goals", function () {
         });
     });
     describe("goals presenter", function () {
+        // TODO tidy
         let goalsUpdate;
         beforeEach(function () {
             goalsUpdate = goals.update;
@@ -160,12 +164,14 @@ describe("Goals", function () {
         });
     });
     describe("render", function () {
+        // TODO tidy
         it("can render with no goal", function () {
             const presentData = {};
             goals.render(presentData, document);
         });
     });
     describe("view", function () {
+        // TODO tidy
         it("can view with no goal", function () {
             const viewData = {};
             goals.view(viewData, data.fields);

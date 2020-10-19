@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("../html.js");
 const boards = require("../boards.js");
 const expansion = require("../expansions/expansion.js");
@@ -8,7 +8,14 @@ const marshlands = (function iife() {
     const href = "http://boardgamegeek.com/boardgameexpansion/179622/";
     const locations = "Temple, Refuge, Canoe, Fountain";
     const boardNames = ["Canoe", "Fountain", "Temple", "Refuge"];
-    const goalNames = ["Geologists", "Messengers", "Noblewomen", "Vassals", "Captains", "Scouts"];
+    const goalNames = [
+        "Geologists",
+        "Messengers",
+        "Noblewomen",
+        "Vassals",
+        "Captains",
+        "Scouts"
+    ].join(", ");
     function initMarshlands(document, data) {
         function addMarshlandsHTML(data) {
             if (!document.querySelector("#marshlands")) {

@@ -1,10 +1,19 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("../html.js");
 
 const expansion = (function () {
     "use strict";
     const baseHref = "http://boardgamegeek.com/boardgameexpansion/117793";
-    const locations = "Oracle, Farm, Tavern, Tower, Harbor, Paddock, Barn, Oasis";
+    const locations = [
+        "Oracle",
+        "Farm",
+        "Tavern",
+        "Tower",
+        "Harbor",
+        "Paddock",
+        "Barn",
+        "Oasis"
+    ].join(", ");
     let expansions = [];
     function initExpansion(document, data) {
         function insertAfter(before, after) {
@@ -93,7 +102,7 @@ const expansion = (function () {
             return sectionList[eachName].includes(name);
         });
     }
-    function addMini({name, id, href, usageHref, extra, boards}, data, document) {
+    function addMini(miniData, data, document) {
         function createCheckedCheckbox(id) {
             return html.create("input", {
                 type: "checkbox",
@@ -126,7 +135,7 @@ const expansion = (function () {
         function createRadio(name, id) {
             return html.create("input", {
                 type: "radio",
-                name: name,
+                name,
                 id
             });
         }
@@ -183,21 +192,27 @@ const expansion = (function () {
                 li.appendChild(extraLink);
             }
         }
+        const {name, id, href, usageHref, extra, boards} = miniData;
         data.mini = data.mini || {};
         data.mini[id] = boards;
         if (document.querySelectorAll(`#${id}`).length === 0) {
             addMiniHTML();
         }
+        const rulesSelector = "#" + id + "Rules";
+        const oddsSelector = "#" + id + "Odds";
+        const percentSelector = "#" + id + "OddsOdds";
         data.fields[id] = document.querySelector("#" + id);
-        data.fields[id + "Rules"] = document.querySelector("#" + id + "Rules");
-        data.fields[id + "Odds"] = document.querySelector("#" + id + "Odds");
-        data.fields[id + "OddsOdds"] = document.querySelector("#" + id + "OddsOdds");
+        data.fields[id + "Rules"] = document.querySelector(rulesSelector);
+        data.fields[id + "Odds"] = document.querySelector(oddsSelector);
+        data.fields[id + "OddsOdds"] = document.querySelector(percentSelector);
         return data;
     }
     function getRuleType(data, id) {
-        return data.fields[id + "Rules"].checked
+        return (
+            data.fields[id + "Rules"].checked
             ? "rules"
-            : "odds";
+            : "odds"
+        );
     }
     function getMinis(data) {
         const mini = Object.keys(data.mini);

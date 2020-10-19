@@ -1,4 +1,4 @@
-/*jslint node es6 */
+/*jslint node */
 const randomKB = require("../src/randomKB.js");
 
 randomKB.init({

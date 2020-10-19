@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
 const boards = require("../../src/boards.js");
@@ -19,12 +19,20 @@ describe("Crossroads", function () {
             miniNames: ["capitol", "caves", "island"],
             contents: {
                 tasks: {
-                    crossroads: ["Home country", "Fortress", "Road", "Place of refuge", "Advance", "Compass point"]
+                    crossroads: [
+                        "Home country",
+                        "Fortress",
+                        "Road",
+                        "Place of refuge",
+                        "Advance",
+                        "Compass point"
+                    ]
                 }
             }
         };
     });
     describe("init", function () {
+        // TODO tidy
         it("adds tasks HTML to the page", function () {
             if (document.querySelector(".tasks")) {
                 document.querySelector(".tasks").remove();
@@ -93,10 +101,19 @@ describe("Crossroads", function () {
             data = boards.init(document, data);
             data = crossroads.init(document, data);
             expect(data.fields.crossroads.parentNode).to.not.equal(undefined);
+        });
+        it("can init multiple times", function () {
+            data = {};
+            data = boards.init(document, data);
+            data = crossroads.init(document, data);
+            data = {};
+            data = boards.init(document, data);
+            data = crossroads.init(document, data);
             expect(data.fields.task0.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {
+        // TODO tidy
         let cacheRandom;
         beforeEach(function () {
             cacheRandom = Math.random;
@@ -113,7 +130,8 @@ describe("Crossroads", function () {
             };
             data = crossroads.init(document, data);
             presentData = crossroads.update(data, presentData);
-            expect(presentData.tasks.length).to.equal(presentData.boards.length);
+            const boardsLength = presentData.boards.length;
+            expect(presentData.tasks.length).to.equal(boardsLength);
         });
         it("one task board means one task", function () {
             Math.random = () => 0.5;
@@ -130,6 +148,7 @@ describe("Crossroads", function () {
         });
     });
     describe("render", function () {
+        // TODO tidy
         it("passes viewData through without changes", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
@@ -152,6 +171,7 @@ describe("Crossroads", function () {
         });
     });
     describe("tasks presenter", function () {
+        // TODO tidy
         let crossroadsUpdate;
         beforeEach(function () {
             crossroadsUpdate = crossroads.update;
@@ -193,6 +213,7 @@ describe("Crossroads", function () {
         });
     });
     describe("view", function () {
+        // TODO tidy
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = crossroads.view(viewData, data.fields);

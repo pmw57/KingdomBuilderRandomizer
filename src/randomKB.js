@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const storage = require("./storage.js");
 const boards = require("./boards.js");
 const goals = require("./goals.js");

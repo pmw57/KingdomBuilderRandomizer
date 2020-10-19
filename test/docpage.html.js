@@ -13,7 +13,6 @@ var docpage = `<html>
     <div class="content">
         <p><button class="randomSetup" type="button">Make random setup</button></p>
     </div>
-    <div class="sidebar"></div>
 
     <div class="footer">
         <p><cite>

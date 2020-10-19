@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
 const boards = require("../../src/boards.js");
@@ -21,7 +21,14 @@ describe("Expansion", function () {
             miniNames: ["capitol"],
             contents: {
                 boards: {
-                    base: ["Board 1", "Board 2", "Board 3", "Board 4", "Board 5", "Board 6"]
+                    base: [
+                        "Board 1",
+                        "Board 2",
+                        "Board 3",
+                        "Board 4",
+                        "Board 5",
+                        "Board 6"
+                    ]
                 }
             },
             mini: {
@@ -30,27 +37,33 @@ describe("Expansion", function () {
         };
     });
     describe("errors", function () {
+        // TODO tidy
         it("throws an error when given no data", function () {
             expect(() => expansion.init()).to.throw(ReferenceError);
         });
         it("throws an error when document not provided", function () {
             const noDocument = undefined;
-            expect(() => expansion.init(noDocument, data)).to.throw("Missing document reference");
+            expect(
+                () => expansion.init(noDocument, data)
+            ).to.throw("Missing document reference");
         });
     });
     describe("register", function () {
+        // TODO tidy
         it("can register an expansion", function () {
             const expansionsList = expansion.registerExpansions(["nomads"]);
             expect(expansionsList.length).to.equal(1);
         });
     });
     describe("init", function () {
+        // TODO tidy
         beforeEach(function () {
             document = new JSDOM(docpage).window.document;
         });
         it("adds sidebar section", function () {
-            document.querySelector(".sidebar").remove();
+            expect(document.querySelector(".sidebar")).to.equal(null);
             expansion.init(document, data);
+            expect(document.querySelector(".sidebar")).to.not.equal(null);
             const el = document.querySelectorAll(".sidebar");
             expect(el.length).to.equal(1);
         });
@@ -79,6 +92,7 @@ describe("Expansion", function () {
         });
     });
     describe("update", function () {
+        // TODO tidy
         it("passes through playerData", function () {
             let presentData = {test: "successful"};
             presentData = expansion.update(presentData);
@@ -94,15 +108,24 @@ describe("Expansion", function () {
         });
     });
     describe("finds an expansion", function () {
+        // TODO tidy
         it("finds a base board", function () {
             expansion.init(document, data);
-            const expansionName = expansion.findExpansion("Board 1", data.contents.boards, data, document);
+            const expansionName = expansion.findExpansion(
+                "Board 1",
+                data.contents.boards,
+                data,
+                document
+            );
             expect(expansionName).to.equal("base");
         });
     });
     describe("gets the active expansions", function () {
+        // TODO tidy
         beforeEach(function () {
-            document.querySelectorAll(".expansions").forEach((el) => el.remove());
+            document.querySelectorAll(".expansions").forEach(
+                (el) => el.remove()
+            );
             boards.init(document, data);
             nomads.init(document, data);
             capitol.init(document, data);
@@ -129,8 +152,11 @@ describe("Expansion", function () {
         });
     });
     describe("gets the mini expansion settings", function () {
+        // TODO tidy
         beforeEach(function () {
-            document.querySelectorAll(".expansions").forEach((el) => el.remove());
+            document.querySelectorAll(".expansions").forEach(
+                (el) => el.remove()
+            );
             boards.init(document, data);
             capitol.init(document, data);
         });
@@ -163,6 +189,7 @@ describe("Expansion", function () {
         });
     });
     describe("adds a mini expansion", function () {
+        // TODO tidy
         const fakeMini = {
             name: "Fake mini",
             id: "fakemini",
@@ -187,10 +214,13 @@ describe("Expansion", function () {
         });
     });
     describe("checks if a names mini expansion odds come true", function () {
+        // TODO tidy
         let cachedRandom;
         beforeEach(function () {
             cachedRandom = Math.random;
-            document.querySelectorAll(".expansions").forEach((el) => el.remove());
+            document.querySelectorAll(".expansions").forEach(
+                (el) => el.remove()
+            );
             data = boards.init(document, data);
             data = capitol.init(document, data);
             document.querySelector("#capitolOdds").checked = true;
@@ -224,12 +254,14 @@ describe("Expansion", function () {
         });
     });
     describe("update", function () {
+        // TODO tidy
         it("implements the update method", function () {
             const presentData = expansion.update({test: "a test"});
             expect(presentData.test).to.eql("a test");
         });
     });
     describe("render", function () {
+        // TODO tidy
         it("passes viewData through the render", function () {
             let presentData = {test: "should not be seen"};
             let viewData = {test: "successful test"};
@@ -238,6 +270,7 @@ describe("Expansion", function () {
         });
     });
     describe("view", function () {
+        // TODO tidy
         it("passes viewData through the view", function () {
             let viewData = {test: "successful test"};
             viewData = expansion.view(viewData, data.fields);

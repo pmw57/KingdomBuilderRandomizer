@@ -26,6 +26,7 @@ describe("Boards", function () {
         expansion.init(document, data);
     });
     describe("init", function () {
+        // TODO tidy
         it("updates data.names", function () {
             expect(data.names.includes("base")).to.equal(false);
             data = boards.init(document, data);
@@ -53,7 +54,7 @@ describe("Boards", function () {
             expect(document.querySelectorAll("#b2").length).to.equal(1);
             expect(document.querySelectorAll("#b3").length).to.equal(1);
         });
-        it("can init multiple times", function () {
+        it("can init multiple times without ruining the boards reference", function () {
             data = {};
             data = boards.init(document, data);
             data = {};
@@ -62,6 +63,7 @@ describe("Boards", function () {
         });
     });
     describe("expansion combinations", function () {
+        // TODO tidy
         beforeEach(function () {
             data = boards.init(document, data);
             data = nomads.init(document, data);
@@ -106,6 +108,7 @@ describe("Boards", function () {
         });
     });
     describe("update", function () {
+        // TODO tidy
         let cachedShuffle;
         beforeEach(function () {
             cachedShuffle = cards.shuffle;
@@ -162,6 +165,7 @@ describe("Boards", function () {
         });
     });
     describe("boards presenter", function () {
+        // TODO tidy
         let cacheRandom;
         beforeEach(function () {
             cacheRandom = Math.random;

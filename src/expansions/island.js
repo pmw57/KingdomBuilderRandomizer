@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const html = require("../html.js");
 const expansion = require("./expansion.js");
 
@@ -10,7 +10,7 @@ const island = (function () {
     function initIsland(document, data) {
         function addIslandHTML(data) {
             if (!document.querySelector(".boards")) {
-                throw new Error("Missing boards section in which to add island");
+                throw new Error("Missing boards section");
             }
             const boards = document.querySelector(".boards");
             const islandField = html.create("output", {type: "text", id: "i0"});

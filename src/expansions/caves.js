@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const expansion = require("./expansion.js");
 
 const caves = (function iife() {
@@ -8,9 +8,12 @@ const caves = (function iife() {
         return expansion.addMini({
             name: "Caves",
             id: "caves",
-            href: "http://boardgamegeek.com/boardgameexpansion/132377/kingdom-builder-caves",
+            href: "http://boardgamegeek.com/boardgameexpansion/132377",
             usageHref: "https://boardgamegeek.com/article/11970175#11970175",
-            extra: {name: "placement", href: "http://boardgamegeek.com/article/10331765#10331765"},
+            extra: {
+                name: "placement",
+                href: "http://boardgamegeek.com/article/10331765#10331765"
+            },
             boards: ["Tavern"]
         }, data, document);
     }

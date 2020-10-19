@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
 const boards = require("../../src/boards.js");
@@ -15,7 +15,6 @@ describe("Caves", function () {
     let data;
     beforeEach(function () {
         document = new JSDOM(docpage).window.document;
-
         data = {
             names: ["base", "nomads"],
             miniNames: ["capitol", "caves", "island"],
@@ -25,7 +24,8 @@ describe("Caves", function () {
         };
     });
     describe("init", function () {
-        it("lets you know when the boards section is missing", function () {
+        // TODO tidy
+        it("informs you when the boards section is missing", function () {
             if (document.querySelector(".boards")) {
                 document.querySelector(".boards").remove();
             }
@@ -34,15 +34,16 @@ describe("Caves", function () {
                 () => caves.view(viewData, data.fields)
             ).to.throw("Missing boards section");
         });
-        it("has no other view effect, as the boards section shows the caves", function () {
+        it("has no other view effect", function () {
             data = {};
             data = boards.init(document, data);
             expect(() => caves.init(document, data)).to.not.throw();
         });
-        it("can init when sidebar is missing", function () {
-            document.querySelector(".sidebar").remove();
+        it("creates a sidebar during init", function () {
+            expect(document.querySelector(".sidebar")).to.equal(null);
             boards.init(document, data);
             expect(() => caves.init(document, data)).to.not.throw();
+            expect(document.querySelector(".sidebar").nodeType).to.equal(1);
         });
         it("can initializes when mini property isn't present", function () {
             data = {};
@@ -71,6 +72,7 @@ describe("Caves", function () {
         });
     });
     describe("update", function () {
+        // TODO tidy
         let cacheGetMinis;
         beforeEach(function () {
             cacheGetMinis = expansion.getMinis;
@@ -122,6 +124,7 @@ describe("Caves", function () {
         });
     });
     describe("presenter", function () {
+        // TODO tidy
         let cavesUpdate;
         beforeEach(function () {
             cavesUpdate = caves.update;
@@ -145,6 +148,7 @@ describe("Caves", function () {
         });
     });
     describe("render", function () {
+        // TODO tidy
         it("passes viewData through without changes", function () {
             const presentData = {
                 boards: [],
@@ -187,6 +191,7 @@ describe("Caves", function () {
         });
     });
     describe("view", function () {
+        // TODO tidy
         it("needs a boards section", function () {
             boards.init(document, data);
             document.querySelector(".boards").remove();
