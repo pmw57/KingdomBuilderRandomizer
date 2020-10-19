@@ -15,7 +15,7 @@ const marshlands = (function iife() {
         "Vassals",
         "Captains",
         "Scouts"
-    ].join(", ");
+    ];
     function initMarshlands(document, data) {
         function addMarshlandsHTML(data) {
             if (!document.querySelector("#marshlands")) {
