@@ -1,14 +1,17 @@
 /*jslint node */
-const {describe, it} = require("mocha");
+const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").expect;
 const presenter = require("../src/presenter.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
 const {JSDOM} = jsdom;
-const {document} = new JSDOM(docpage).window;
 
 describe("Presenter", function () {
     "use strict";
+    let document;
+    beforeEach(function () {
+        document = new JSDOM(docpage).window.document;
+    });
     describe("presents boards", function () {
         // TODO tidy
         it("updates from a list of parts", function () {

@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
 const boards = require("../src/boards.js");
@@ -14,15 +14,16 @@ describe("Players", function () {
         document = new JSDOM(docpage).window.document;
     });
     describe("init", function () {
-        // TODO tidy
-        it("can init multiple times without ruining the player count input", function () {
+        it("doesn't ruin playerCount when init'd multiple times", function () {
             let data = {};
             data = boards.init(document, data);
             data = players.init(document, data);
             data = {};
             data = boards.init(document, data);
             data = players.init(document, data);
-            expect(data.fields.playerCount.parentNode).to.not.equal(undefined);
+            const playerField = data.fields.playerCount;
+            const parentName = playerField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLParagraphElement");
         });
     });
     describe("update", function () {

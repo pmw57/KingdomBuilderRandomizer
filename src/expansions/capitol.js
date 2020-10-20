@@ -19,7 +19,7 @@ const capitol = (function iife() {
             throw new ReferenceError("Missing boards data");
         }
         if (!document.querySelector(".boards")) {
-            throw new ReferenceError("Missing boards section");
+            throw new ReferenceError("Missing boards HTML");
         }
         if (!document.querySelector(".sidebar ul")) {
             data = expansion.init(document, data);

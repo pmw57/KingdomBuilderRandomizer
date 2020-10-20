@@ -37,7 +37,7 @@ describe("Capitol", function () {
             };
             expect(
                 () => capitol.init(document, data)
-            ).to.throw("Missing boards section");
+            ).to.throw("Missing boards HTML");
         });
     });
     describe("init", function () {

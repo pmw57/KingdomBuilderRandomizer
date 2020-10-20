@@ -50,7 +50,7 @@ describe("Nomads", function () {
             data = nomads.init(document, data);
             expect(data.contents.boards.nomads.length).to.equal(4);
         });
-        it("can init multiple times", function () {
+        it("doesn't ruin nomads when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = nomads.init(document, data);

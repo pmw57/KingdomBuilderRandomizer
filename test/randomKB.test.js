@@ -1,15 +1,16 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").expect;
 const randomKB = require("../src/randomKB.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
 const {JSDOM} = jsdom;
-const {document} = new JSDOM(docpage).window;
 
 describe("Random KB", function () {
     "use strict";
+    let document;
     beforeEach(function () {
+        document = new JSDOM(docpage).window.document;
         delete document.defaultView.localStorage;
     });
     describe("config handler", function () {
@@ -20,18 +21,20 @@ describe("Random KB", function () {
             ).to.not.throw();
         });
     });
-    it("can initialize", function () {
+    it("can init", function () {
         const config = {};
         expect(
             () => randomKB.init(config, document)
         ).to.not.throw();
     });
+    // TODO tidy
     it("loads an expansion", function () {
         const config = {expansions: ["nomads"]};
         expect(
             () => randomKB.init(config, document)
         ).to.not.throw();
     });
+    // TODO tidy
     it("uses local storage", function () {
         const config = {};
         const fakeDoc = {

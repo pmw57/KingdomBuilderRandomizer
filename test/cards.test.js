@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").expect;
 const cards = require("../src/cards.js");

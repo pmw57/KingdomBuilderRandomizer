@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").expect;
 const boards = require("../src/boards.js");
@@ -6,12 +6,13 @@ const view = require("../src/view.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
 const {JSDOM} = jsdom;
-const {document} = new JSDOM(docpage).window;
 
 describe("View", function () {
     "use strict";
+    let document;
     let presentData;
     beforeEach(function () {
+        document = new JSDOM(docpage).window.document;
         presentData = {
             boards: [
                 {name: "", type: ""},
@@ -35,9 +36,12 @@ describe("View", function () {
     describe("errors", function () {
         it("throws error when presentData is missing", function () {
             presentData = undefined;
-            expect(() => view.update(presentData)).to.throw("Missing presentData");
+            expect(
+                () => view.update(presentData)
+            ).to.throw("Missing presentData");
         });
     });
+    // TODO tidy
     describe("show", function () {
         it("returns true after updating the view", function () {
             const data = {};

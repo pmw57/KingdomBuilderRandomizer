@@ -8,14 +8,13 @@ const caves = require("../../src/expansions/caves.js");
 const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
 const {JSDOM} = jsdom;
-const window = new JSDOM(docpage).window;
 
 describe("Storage", function () {
     "use strict";
-    let fakeDoc;
     let document;
+    let fakeDoc;
     beforeEach(function () {
-        document = window.document;
+        document = new JSDOM(docpage).window.document;
         fakeDoc = {
             createElement: (el) => document.createElement(el),
             createTextNode: (text) => document.createTextNode(text),
@@ -83,6 +82,10 @@ describe("Storage", function () {
     });
     describe("monitor", function () {
         // TODO tidy
+        let window;
+        beforeEach(function () {
+            window = document.defaultView;
+        });
         it("can monitor text input", function () {
             let data = {};
             data = boards.init(document, data);

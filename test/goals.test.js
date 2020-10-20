@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node  */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
 const cards = require("../src/cards.js");
@@ -8,14 +8,14 @@ const presenter = require("../src/presenter.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
 const {JSDOM} = jsdom;
-const {document} = new JSDOM(docpage).window;
 
 describe("Goals", function () {
     "use strict";
+    let document;
     let data;
     beforeEach(function () {
+        document = new JSDOM(docpage).window.document;
         data = {
-            names: ["base", "nomads"],
             contents: {
                 boards: {
                     "base": ["Board 1", "Board 2"],
@@ -25,56 +25,53 @@ describe("Goals", function () {
                     "base": ["Goal 1", "Goal 2", "Goal 3", "Goal 4"],
                     "nomads": ["Nomads Goal 1", "Nomads Goal 2"]
                 }
-            },
-            mini: {}
+            }
         };
     });
     describe("errors", function () {
-        // TODO tidy
         it("throws an error when no document", function () {
-            data = {contents: {}};
             const noDocument = undefined;
-            expect(() => goals.init(noDocument, data)).to.throw("Missing document");
+            data = {};
+            expect(
+                () => goals.init(noDocument, data)
+            ).to.throw("Missing document");
         });
     });
     describe("init", function () {
-        // TODO tidy
-        it("adds goals HTML to the page", function () {
-            if (document.querySelector(".goals")) {
-                document.querySelector(".goals").remove();
-            }
-            expect(document.querySelectorAll(".goals").length).to.equal(0);
-            boards.init(document, data);
-            goals.init(document, data);
-            expect(document.querySelectorAll(".goals").length).to.equal(1);
-            expect(document.querySelectorAll("#c0").length).to.equal(1);
-            expect(document.querySelectorAll("#c1").length).to.equal(1);
-            expect(document.querySelectorAll("#c2").length).to.equal(1);
-        });
-        it("adds goals only once to the page", function () {
-            boards.init(document, data);
-            goals.init(document, data);
-            expect(document.querySelectorAll(".goals").length).to.equal(1);
-            goals.init(document, data);
-            expect(document.querySelectorAll(".goals").length).to.equal(1);
-            expect(document.querySelectorAll("#c0").length).to.equal(1);
-            expect(document.querySelectorAll("#c1").length).to.equal(1);
-            expect(document.querySelectorAll("#c2").length).to.equal(1);
-        });
         it("adds contents property to data if missing", function () {
             data = boards.init(document, data);
             delete data.contents;
             data = goals.init(document, data);
-            expect(data.contents).to.not.equal(undefined);
+            expect(data.contents).to.be.an("object");
         });
-        it("can init multiple times without ruining the goals input", function () {
+        it("doesn't ruin goals when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = goals.init(document, data);
             data = {};
             data = boards.init(document, data);
             data = goals.init(document, data);
-            expect(data.fields.goal0.parentNode).to.not.equal(undefined);
+            const goalField = data.fields.goal0;
+            const parentName = goalField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLDivElement");
+        });
+        it("adds goals HTML to the page", function () {
+            data = boards.init(document, data);
+            expect(document.querySelector(".goals")).to.equal(null);
+            data = goals.init(document, data);
+            expect(document.querySelector(".goals").nodeName).to.equal("DIV");
+            expect(document.querySelector("#c0").nodeName).to.equal("OUTPUT");
+            expect(document.querySelector("#c1").nodeName).to.equal("OUTPUT");
+            expect(document.querySelector("#c2").nodeName).to.equal("OUTPUT");
+        });
+        it("adds goals only once to the page", function () {
+            data = boards.init(document, data);
+            data = goals.init(document, data);
+            data = goals.init(document, data);
+            expect(document.querySelectorAll(".goals").length).to.equal(1);
+            expect(document.querySelectorAll("#c0").length).to.equal(1);
+            expect(document.querySelectorAll("#c1").length).to.equal(1);
+            expect(document.querySelectorAll("#c2").length).to.equal(1);
         });
     });
     describe("update", function () {
@@ -93,7 +90,7 @@ describe("Goals", function () {
             goals.update(data, presentData, document);
             expect(presentData.goals).to.not.equal(undefined);
         });
-        it("puts together three random goals from the active expansions", function () {
+        it("gets three random goals from the active expansions", function () {
             const testGoals = JSON.stringify(data.contents.goals);
             boards.init(document, data);
             goals.init(document, data);

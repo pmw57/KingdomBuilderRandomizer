@@ -1,4 +1,4 @@
-/*jslint node, es6 */
+/*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
 const expansion = require("../src/expansions/expansion.js");
@@ -9,57 +9,52 @@ const presenter = require("../src/presenter.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
 const {JSDOM} = jsdom;
-const {document} = new JSDOM(docpage).window;
 
 describe("Boards", function () {
     "use strict";
+    let document;
     let data;
     let shuffleTestStub;
     beforeEach(function () {
-        data = {
-            names: []
-        };
+        document = new JSDOM(docpage).window.document;
+        data = {};
         shuffleTestStub = function (arr) {
             // reverse is more reliably tested than shuffle
             return arr.reverse();
         };
-        expansion.init(document, data);
     });
     describe("init", function () {
-        // TODO tidy
         it("updates data.names", function () {
-            expect(data.names.includes("base")).to.equal(false);
+            expect(data.names).to.equal(undefined);
             data = boards.init(document, data);
-            expect(data.names.includes("base")).to.equal(true);
+            expect(data.names).includes("base");
         });
         it("adds boards HTML to the page", function () {
-            if (document.querySelector(".boards")) {
-                document.querySelector(".boards").remove();
-            }
-            expect(document.querySelectorAll(".boards").length).to.equal(0);
-            boards.init(document, data);
-            expect(document.querySelectorAll(".boards").length).to.equal(1);
-            expect(document.querySelectorAll("#b0").length).to.equal(1);
-            expect(document.querySelectorAll("#b1").length).to.equal(1);
-            expect(document.querySelectorAll("#b2").length).to.equal(1);
-            expect(document.querySelectorAll("#b3").length).to.equal(1);
+            expect(document.querySelector(".boards")).to.equal(null);
+            data = boards.init(document, data);
+            expect(document.querySelector(".boards").nodeName).to.equal("DIV");
+            expect(document.querySelector("#b0").nodeName).to.equal("OUTPUT");
+            expect(document.querySelector("#b1").nodeName).to.equal("OUTPUT");
+            expect(document.querySelector("#b2").nodeName).to.equal("OUTPUT");
+            expect(document.querySelector("#b3").nodeName).to.equal("OUTPUT");
         });
         it("adds boards only once to the page", function () {
-            boards.init(document, data);
-            expect(document.querySelectorAll(".boards").length).to.equal(1);
-            boards.init(document, data);
+            data = boards.init(document, data);
+            data = boards.init(document, data);
             expect(document.querySelectorAll(".boards").length).to.equal(1);
             expect(document.querySelectorAll("#b0").length).to.equal(1);
             expect(document.querySelectorAll("#b1").length).to.equal(1);
             expect(document.querySelectorAll("#b2").length).to.equal(1);
             expect(document.querySelectorAll("#b3").length).to.equal(1);
         });
-        it("can init multiple times without ruining the boards reference", function () {
+        it("doesn't ruin boards when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = {};
             data = boards.init(document, data);
-            expect(data.fields.boards.parentNode).to.not.equal(undefined);
+            const boardsField = data.fields.boards;
+            const parentName = boardsField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLDivElement");
         });
     });
     describe("expansion combinations", function () {
