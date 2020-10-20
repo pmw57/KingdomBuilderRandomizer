@@ -60,8 +60,8 @@ describe("Capitol", function () {
         });
         it("can initializes when mini property isn't present", function () {
             delete data.mini;
-            boards.init(document, data);
-            capitol.init(document, data);
+            data = boards.init(document, data);
+            data = capitol.init(document, data);
             expect(Array.isArray(data.mini.capitol)).to.equal(true);
         });
         it("can init multiple times", function () {

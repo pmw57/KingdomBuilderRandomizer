@@ -23,41 +23,32 @@ describe("Marshlands", function () {
         };
     });
     describe("inits", function () {
-        // TODO tidy
-        function removeEl(selector) {
-            const el = document.querySelector(selector);
-            el.parentNode.removeChild(el);
-        }
-        it("adds needed HTML code to the page", function () {
-            marshlands.init(document, data);
-            removeEl("#marshlands");
-            const marshlandsBefore = document.querySelectorAll("#marshlands");
-            expect(marshlandsBefore.length).to.equal(0);
-            marshlands.init(document, data);
-            const marshlandsAfter = document.querySelectorAll("#marshlands");
-            expect(marshlandsAfter.length).to.equal(1);
+        it("adds checkbox to the page", function () {
+            data = marshlands.init(document, data);
+            const checkbox = document.querySelector("#marshlands");
+            expect(checkbox.nodeName).to.equal("INPUT");
         });
-        it("doesn't add HTML code when it already exists", function () {
-            marshlands.init(document, data);
-            const marshlandsBefore = document.querySelectorAll("#marshlands");
-            expect(marshlandsBefore.length).to.equal(1);
-            marshlands.init(document, data);
-            const marshlandsAfter = document.querySelectorAll("#marshlands");
-            expect(marshlandsAfter.length).to.equal(1);
+        it("doesn't duplicate HTML code", function () {
+            data = marshlands.init(document, data);
+            data = marshlands.init(document, data);
+            const checkboxes = document.querySelectorAll("#marshlands");
+            expect(checkboxes.length).to.equal(1);
         });
         it("updates data.names", function () {
-            expect(data.names.includes("marshlands")).to.equal(false);
+            expect(data.names).to.not.include("marshlands");
             data = marshlands.init(document, data);
-            expect(data.names.includes("marshlands")).to.equal(true);
+            expect(data.names).to.include("marshlands");
         });
-        it("can init multiple times", function () {
+        it("doesn't ruin marshlands when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = marshlands.init(document, data);
             data = {};
             data = boards.init(document, data);
             data = marshlands.init(document, data);
-            expect(data.fields.marshlands.parentNode).to.not.equal(undefined);
+            const checkboxField = data.fields.marshlands;
+            const parentName = checkboxField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLLIElement");
         });
     });
     describe("update", function () {

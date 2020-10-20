@@ -99,9 +99,6 @@ const crossroads = (function iife() {
             if (!data.names.includes("crossroads")) {
                 data.names.push("crossroads");
             }
-            if (!data.contents) {
-                data.contents = {};
-            }
             if (!data.contents.boards) {
                 data = boards.init(document, data);
             }

@@ -24,34 +24,29 @@ describe("Nomads", function () {
         };
     });
     describe("inits", function () {
-        // TODO tidy
         function removeEl(selector) {
             const el = document.querySelector(selector);
             el.parentNode.removeChild(el);
         }
         it("adds needed HTML code to the page", function () {
-            nomads.init(document, data);
-            removeEl("#nomads");
-            const nomadsBefore = document.querySelectorAll("#nomads");
-            expect(nomadsBefore.length).to.equal(0);
-            nomads.init(document, data);
-            const nomadsAfter = document.querySelectorAll("#nomads");
-            expect(nomadsAfter.length).to.equal(1);
+            expect(document.querySelector("#nomads")).to.equal(null);
+            data = nomads.init(document, data);
+            const checkbox = document.querySelector("#nomads");
+            expect(checkbox.nodeName).to.equal("INPUT");
         });
         it("doesn't add HTML code when it already exists", function () {
-            nomads.init(document, data);
-            const nomadsBefore = document.querySelectorAll("#nomads");
-            expect(nomadsBefore.length).to.equal(1);
-            nomads.init(document, data);
-            const nomadsAfter = document.querySelectorAll("#nomads");
-            expect(nomadsAfter.length).to.equal(1);
+            data = nomads.init(document, data);
+            data = nomads.init(document, data);
+            const checkboxes = document.querySelectorAll("#nomads");
+            expect(checkboxes.length).to.equal(1);
         });
         it("updates data.names", function () {
-            expect(data.names.includes("nomads")).to.equal(false);
+            expect(data.names).to.not.include("nomads");
             data = nomads.init(document, data);
-            expect(data.names.includes("nomads")).to.equal(true);
+            expect(data.names).to.include("nomads");
         });
         it("adds Nomads boards", function () {
+            expect(data.contents.boards.nomads).to.equal(undefined);
             data = nomads.init(document, data);
             expect(data.contents.boards.nomads.length).to.equal(4);
         });
@@ -62,7 +57,9 @@ describe("Nomads", function () {
             data = {};
             data = boards.init(document, data);
             data = nomads.init(document, data);
-            expect(data.fields.nomads.parentNode).to.not.equal(undefined);
+            const nomadsField = data.fields.nomads;
+            const parentName = nomadsField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLLIElement");
         });
     });
     describe("update", function () {

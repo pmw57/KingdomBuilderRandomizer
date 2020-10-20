@@ -32,30 +32,42 @@ describe("Crossroads", function () {
         };
     });
     describe("init", function () {
-        // TODO tidy
+        it("adds Crossroads data", function () {
+            data = {};
+            data = crossroads.init(document, data);
+            expect(data.names).to.include("crossroads");
+            expect(data.contents.boards.crossroads).to.be.an("array");
+            expect(data.contents.goals.crossroads).to.be.an("array");
+            expect(data.contents.tasks.crossroads).to.be.an("array");
+        });
         it("adds tasks HTML to the page", function () {
-            if (document.querySelector(".tasks")) {
-                document.querySelector(".tasks").remove();
-            }
-            expect(document.querySelectorAll(".tasks").length).to.equal(0);
-            crossroads.init(document, data);
-            expect(document.querySelectorAll(".tasks").length).to.equal(1);
+            expect(document.querySelector(".tasks")).to.equal(null);
+            data = crossroads.init(document, data);
             expect(document.querySelectorAll("#t0").length).to.equal(1);
             expect(document.querySelectorAll("#t1").length).to.equal(1);
             expect(document.querySelectorAll("#t2").length).to.equal(1);
             expect(document.querySelectorAll("#t3").length).to.equal(1);
         });
         it("adds tasks only once to the page", function () {
-            if (document.querySelector(".tasks")) {
-                document.querySelector(".tasks").remove();
-            }
-            crossroads.init(document, data);
-            crossroads.init(document, data);
-            expect(document.querySelectorAll(".tasks").length).to.equal(1);
+            data = crossroads.init(document, data);
+            data = crossroads.init(document, data);
+            const tasks = document.querySelectorAll(".tasks");
+            expect(tasks.length).to.equal(1);
             expect(document.querySelectorAll("#t0").length).to.equal(1);
             expect(document.querySelectorAll("#t1").length).to.equal(1);
             expect(document.querySelectorAll("#t2").length).to.equal(1);
             expect(document.querySelectorAll("#t3").length).to.equal(1);
+        });
+        it("doesn't ruin tasks when init'd multiple times", function () {
+            data = {};
+            data = boards.init(document, data);
+            data = crossroads.init(document, data);
+            data = {};
+            data = boards.init(document, data);
+            data = crossroads.init(document, data);
+            const task0 = data.fields.task0;
+            const parentName = task0.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLDivElement");
         });
         it("adds expansions section", function () {
             data = crossroads.init(document, data);
@@ -66,50 +78,10 @@ describe("Crossroads", function () {
             const expansionsAfter = document.querySelectorAll(".expansions");
             expect(expansionsAfter.length).to.equal(1);
         });
-        it("adds needed HTML code to the page", function () {
+        it("adds Crossroads to expansions section", function () {
             data = crossroads.init(document, data);
-            document.querySelector("#crossroads").remove();
-            const crossroadsBefore = document.querySelectorAll("#crossroads");
-            expect(crossroadsBefore.length).to.equal(0);
-            data = crossroads.init(document, data);
-            const crossroadsAfter = document.querySelectorAll("#crossroads");
-            expect(crossroadsAfter.length).to.equal(1);
-        });
-        it("adds data.contents if it doesn't exist", function () {
-            delete data.contents;
-            data = crossroads.init(document, data);
-            expect(data.contents).to.not.equal(undefined);
-        });
-        it("adds data.names if it doesn't exist", function () {
-            delete data.names;
-            data = crossroads.init(document, data);
-            expect(data.names.includes("crossroads")).to.equal(true);
-        });
-        it("updates data.names", function () {
-            data = {};
-            data = crossroads.init(document, data);
-            expect(data.names.includes("crossroads")).to.equal(true);
-            expect(data.contents.boards.crossroads).to.be.an("array");
-            expect(data.contents.goals.crossroads).to.be.an("array");
-            expect(data.contents.tasks.crossroads).to.be.an("array");
-        });
-        it("can init multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = crossroads.init(document, data);
-            data = {};
-            data = boards.init(document, data);
-            data = crossroads.init(document, data);
-            expect(data.fields.crossroads.parentNode).to.not.equal(undefined);
-        });
-        it("can init multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = crossroads.init(document, data);
-            data = {};
-            data = boards.init(document, data);
-            data = crossroads.init(document, data);
-            expect(data.fields.task0.parentNode).to.not.equal(undefined);
+            const checkbox = document.querySelectorAll("#crossroads");
+            expect(checkbox.length).to.equal(1);
         });
     });
     describe("update", function () {

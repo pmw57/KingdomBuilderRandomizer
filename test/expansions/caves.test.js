@@ -24,44 +24,39 @@ describe("Caves", function () {
         };
     });
     describe("init", function () {
-        // TODO tidy
         it("informs you when the boards section is missing", function () {
-            if (document.querySelector(".boards")) {
-                document.querySelector(".boards").remove();
-            }
+            data = boards.init(document, data);
+            document.querySelector(".boards").remove();
             const viewData = {};
             expect(
                 () => caves.view(viewData, data.fields)
             ).to.throw("Missing boards section");
         });
-        it("has no other view effect", function () {
-            data = {};
+        it("passes data through the init", function () {
+            data = {test: "successful test"};
             data = boards.init(document, data);
-            expect(() => caves.init(document, data)).to.not.throw();
+            data = caves.init(document, data);
+            expect(data.test).to.equal("successful test");
         });
         it("creates a sidebar during init", function () {
+            data = boards.init(document, data);
             expect(document.querySelector(".sidebar")).to.equal(null);
-            boards.init(document, data);
-            expect(() => caves.init(document, data)).to.not.throw();
-            expect(document.querySelector(".sidebar").nodeType).to.equal(1);
+            data = caves.init(document, data);
+            const sidebar = document.querySelector(".sidebar");
+            expect(sidebar.nodeType).to.equal(1);
         });
         it("can initializes when mini property isn't present", function () {
             data = {};
-            caves.init(document, data);
-        });
-        it("can initializes when mini property is present", function () {
-            data.mini = {};
-            expansion.init(document, data);
             expect(() => caves.init(document, data)).to.not.throw();
         });
         it("defaults to rules", function () {
-            caves.init(document, data);
+            data = caves.init(document, data);
             const cavesRules = document.querySelector("#cavesRules");
             const cavesOdds = document.querySelector("#cavesOdds");
             expect(cavesRules.checked).to.equal(true);
             expect(cavesOdds.checked).to.equal(false);
         });
-        it("can init multiple times", function () {
+        it("has valid caves field after multiple inits", function () {
             data = {};
             data = boards.init(document, data);
             data = caves.init(document, data);

@@ -27,7 +27,6 @@ describe("Storage", function () {
         };
     });
     describe("init", function () {
-        // TODO tidy
         it("can init", function () {
             expect(
                 () => storage.init(document)

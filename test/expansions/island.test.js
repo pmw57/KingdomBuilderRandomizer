@@ -31,48 +31,38 @@ describe("Island", function () {
         };
     });
     describe("errors", function () {
-        // TODO tidy
         it("throws an error when the boards section is missing", function () {
             data = {};
-            const viewFn = () => island.init(document, data);
-            expect(viewFn).to.throw("Missing boards section");
+            expect(
+                () => island.init(document, data)
+            ).to.throw("Missing boards section");
         });
     });
     describe("init", function () {
-        // TODO tidy
         it("adds island HTML to the page", function () {
-            if (document.querySelector("#i0")) {
-                document.querySelector("#i0").remove();
-            }
-            expect(document.querySelectorAll("#i0").length).to.equal(0);
-            boards.init(document, data);
-            island.init(document, data);
-            expect(document.querySelectorAll("#i0").length).to.equal(1);
+            data = boards.init(document, data);
+            expect(document.querySelector("#i0")).to.equal(null);
+            data = island.init(document, data);
+            const checkbox = document.querySelector("#i0");
+            expect(checkbox.nodeName).to.equal("OUTPUT");
         });
         it("adds island only once to the page", function () {
-            boards.init(document, data);
-            island.init(document, data);
-            expect(document.querySelectorAll("#i0").length).to.equal(1);
-            island.init(document, data);
-            expect(document.querySelectorAll("#i0").length).to.equal(1);
+            data = boards.init(document, data);
+            data = island.init(document, data);
+            data = island.init(document, data);
+            const islandCheckboxes = document.querySelectorAll("#i0");
+            expect(islandCheckboxes.length).to.equal(1);
         });
-        it("can init multiple times", function () {
+        it("doesn't ruin island when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = island.init(document, data);
             data = {};
             data = boards.init(document, data);
             data = island.init(document, data);
-            expect(data.fields.island.parentNode).to.not.equal(undefined);
-        });
-        it("can init multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = island.init(document, data);
-            data = {};
-            data = boards.init(document, data);
-            data = island.init(document, data);
-            expect(data.fields.i0.parentNode).to.not.equal(undefined);
+            const islandField = data.fields.i0;
+            const parentName = islandField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLDivElement");
         });
     });
     describe("is water board", function () {

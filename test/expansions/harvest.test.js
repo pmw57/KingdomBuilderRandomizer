@@ -23,41 +23,32 @@ describe("Harvest", function () {
         };
     });
     describe("inits", function () {
-        // TODO tidy
-        function removeEl(selector) {
-            const el = document.querySelector(selector);
-            el.parentNode.removeChild(el);
-        }
         it("adds needed HTML code to the page", function () {
-            harvest.init(document, data);
-            removeEl("#harvest");
-            const harvestBefore = document.querySelectorAll("#harvest");
-            expect(harvestBefore.length).to.equal(0);
-            harvest.init(document, data);
-            const harvestAfter = document.querySelectorAll("#harvest");
-            expect(harvestAfter.length).to.equal(1);
+            data = harvest.init(document, data);
+            const checkbox = document.querySelector("#harvest");
+            expect(checkbox.nodeName).to.equal("INPUT");
         });
         it("doesn't add HTML code when it already exists", function () {
-            harvest.init(document, data);
-            const harvestBefore = document.querySelectorAll("#harvest");
-            expect(harvestBefore.length).to.equal(1);
-            harvest.init(document, data);
-            const harvestAfter = document.querySelectorAll("#harvest");
-            expect(harvestAfter.length).to.equal(1);
+            data = harvest.init(document, data);
+            data = harvest.init(document, data);
+            const checkboxes = document.querySelectorAll("#harvest");
+            expect(checkboxes.length).to.equal(1);
         });
         it("updates data.names", function () {
             expect(data.names.includes("harvest")).to.equal(false);
             data = harvest.init(document, data);
             expect(data.names.includes("harvest")).to.equal(true);
         });
-        it("can init multiple times", function () {
+        it("doesn't ruin harvest when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = harvest.init(document, data);
             data = {};
             data = boards.init(document, data);
             data = harvest.init(document, data);
-            expect(data.fields.harvest.parentNode).to.not.equal(undefined);
+            const harvestField = data.fields.harvest;
+            const parentName = harvestField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLLIElement");
         });
     });
     describe("update", function () {

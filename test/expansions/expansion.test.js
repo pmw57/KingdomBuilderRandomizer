@@ -12,10 +12,11 @@ const {JSDOM} = jsdom;
 
 describe("Expansion", function () {
     "use strict";
+    let document;
     let data;
-    let document = new JSDOM(docpage).window.document;
 
     beforeEach(function () {
+        document = new JSDOM(docpage).window.document;
         data = {
             names: ["base", "nomads"],
             miniNames: ["capitol"],
@@ -37,58 +38,55 @@ describe("Expansion", function () {
         };
     });
     describe("errors", function () {
-        // TODO tidy
         it("throws an error when given no data", function () {
-            expect(() => expansion.init()).to.throw(ReferenceError);
+            expect(() => expansion.init()).to.throw("Missing data");
         });
         it("throws an error when document not provided", function () {
             const noDocument = undefined;
             expect(
                 () => expansion.init(noDocument, data)
-            ).to.throw("Missing document reference");
+            ).to.throw("Missing document");
         });
     });
     describe("register", function () {
-        // TODO tidy
         it("can register an expansion", function () {
             const expansionsList = expansion.registerExpansions(["nomads"]);
-            expect(expansionsList.length).to.equal(1);
+            expect(expansionsList[0].init.name).to.equal("initNomads");
         });
     });
     describe("init", function () {
-        // TODO tidy
         beforeEach(function () {
             document = new JSDOM(docpage).window.document;
         });
         it("adds sidebar section", function () {
             expect(document.querySelector(".sidebar")).to.equal(null);
-            expansion.init(document, data);
+            data = expansion.init(document, data);
             expect(document.querySelector(".sidebar")).to.not.equal(null);
-            const el = document.querySelectorAll(".sidebar");
-            expect(el.length).to.equal(1);
+            const sidebar = document.querySelector(".sidebar");
+            expect(sidebar.nodeName).to.equal("DIV");
         });
         it("adds expansions section", function () {
+            expect(document.querySelector(".expansions")).to.equal(null);
             data = expansion.init(document, data);
-            document.querySelector(".expansions").remove();
-            expansion.init(document, data);
-            const el = document.querySelectorAll(".expansions");
-            expect(el.length).to.equal(1);
+            const expansions = document.querySelector(".expansions");
+            expect(expansions.nodeName).to.equal("DIV");
         });
         it("adds base", function () {
+            expect(document.querySelector("#base")).to.equal(null);
             data = expansion.init(document, data);
-            document.querySelector("#base").remove();
-            expansion.init(document, data);
-            const el = document.querySelectorAll("#base");
-            expect(el.length).to.equal(1);
+            const base = document.querySelector("#base");
+            expect(base.nodeName).to.equal("INPUT");
         });
-        it("can init multiple times", function () {
+        it("doesn't ruin base when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = expansion.init(document, data);
             data = {};
             data = boards.init(document, data);
             data = expansion.init(document, data);
-            expect(data.fields.base.parentNode).to.not.equal(undefined);
+            const baseField = data.fields.base;
+            const parentName = baseField.parentNode.constructor.name;
+            expect(parentName).to.equal("HTMLLIElement");
         });
     });
     describe("update", function () {
@@ -101,6 +99,7 @@ describe("Expansion", function () {
         it("uses base goals even when base boards aren't used", function () {
             data = boards.init(document, data);
             data = goals.init(document, data);
+            data = expansion.init(document, data);
             let presentData = {};
             document.querySelector("#base").removeAttribute("checked");
             presentData = goals.update(data, presentData, document);
