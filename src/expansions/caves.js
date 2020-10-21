@@ -9,10 +9,10 @@ const caves = (function iife() {
             name: "Caves",
             id: "caves",
             href: "http://boardgamegeek.com/boardgameexpansion/132377",
-            usageHref: "https://boardgamegeek.com/article/11970175#11970175",
+            usageHref: "https://boardgamegeek.com/article/11970175",
             extra: {
                 name: "placement",
-                href: "http://boardgamegeek.com/article/10331765#10331765"
+                href: "http://boardgamegeek.com/article/10331765"
             },
             boards: ["Tavern"]
         }, data, document);

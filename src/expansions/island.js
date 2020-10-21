@@ -4,8 +4,8 @@ const expansion = require("./expansion.js");
 
 const island = (function () {
     "use strict";
-    const href = "http://boardgamegeek.com/boardgameexpansion/156102/";
-    const usageHref = "https://www.kickstarter.com/projects/1016374822/";
+    const href = "http://boardgamegeek.com/boardgameexpansion/156102";
+    const usageHref = "https://www.kickstarter.com/projects/1016374822";
     const islandBoards = ["Harbor", "Lighthouse"];
     function initIsland(document, data) {
         function addIslandHTML(data) {

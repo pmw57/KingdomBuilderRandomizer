@@ -10,7 +10,7 @@ const capitol = (function iife() {
                 name: "Capitol",
                 id: "capitol",
                 href: "http://boardgamegeek.com/boardgameexpansion/109141",
-                usageHref: "http://boardgamegeek.com/article/12458223#12458223",
+                usageHref: "http://boardgamegeek.com/article/12458223",
                 boards: ["Oracle", "Harbor"]
             }, data, document);
             return data;
