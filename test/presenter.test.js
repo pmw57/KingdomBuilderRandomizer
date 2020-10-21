@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const presenter = require("../src/presenter.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
@@ -31,14 +31,14 @@ describe("Presenter", function () {
             const data = {};
             const parts = [partStub];
             const presentData = presenter.update(data, parts, document);
-            expect(presentData.boards[0].name).to.equal("test1");
-            expect(presentData.boards[1].name).to.equal("test2");
-            expect(presentData.boards[2].name).to.equal("test3");
-            expect(presentData.boards[3].name).to.equal("test4");
-            expect(presentData.boards[0].type).to.equal("type1");
-            expect(presentData.boards[1].type).to.equal("type2");
-            expect(presentData.boards[2].type).to.equal("type3");
-            expect(presentData.boards[3].type).to.equal("type4");
+            expect(presentData.boards[0]).to.have.property("name", "test1");
+            expect(presentData.boards[1]).to.have.property("name", "test2");
+            expect(presentData.boards[2]).to.have.property("name", "test3");
+            expect(presentData.boards[3]).to.have.property("name", "test4");
+            expect(presentData.boards[0]).to.have.property("type", "type1");
+            expect(presentData.boards[1]).to.have.property("type", "type2");
+            expect(presentData.boards[2]).to.have.property("type", "type3");
+            expect(presentData.boards[3]).to.have.property("type", "type4");
         });
     });
 });

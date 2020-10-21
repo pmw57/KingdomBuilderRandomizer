@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../../src/boards.js");
 const goals = require("../../src/goals.js");
 const expansion = require("../../src/expansions/expansion.js");
@@ -50,8 +50,8 @@ describe("Expansion", function () {
     });
     describe("register", function () {
         it("can register an expansion", function () {
-            const expansionsList = expansion.registerExpansions(["nomads"]);
-            expect(expansionsList[0].init.name).to.equal("initNomads");
+            const list = expansion.registerExpansions(["nomads"]);
+            expect(list[0].init).to.have.property("name", "initNomads");
         });
     });
     describe("init", function () {
@@ -63,24 +63,25 @@ describe("Expansion", function () {
             data = expansion.init(document, data);
             expect(document.querySelector(".sidebar")).to.not.equal(null);
             const sidebar = document.querySelector(".sidebar");
-            expect(sidebar.nodeName).to.equal("DIV");
+            expect(sidebar).to.have.tagName("DIV");
         });
         it("adds expansions section", function () {
             expect(document.querySelector(".expansions")).to.equal(null);
             data = expansion.init(document, data);
             const expansions = document.querySelector(".expansions");
-            expect(expansions.nodeName).to.equal("DIV");
+            expect(expansions).to.have.tagName("DIV");
         });
         it("adds base", function () {
             expect(document.querySelector("#base")).to.equal(null);
             data = expansion.init(document, data);
             const base = document.querySelector("#base");
-            expect(base.nodeName).to.equal("INPUT");
+            expect(base).to.have.tagName("INPUT");
         });
         it("doesn't ruin base when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = expansion.init(document, data);
+            // innerHTML in second init used to ruin previous references
             data = {};
             data = boards.init(document, data);
             data = expansion.init(document, data);
@@ -94,7 +95,7 @@ describe("Expansion", function () {
         it("passes through playerData", function () {
             let presentData = {test: "successful"};
             presentData = expansion.update(presentData);
-            expect(presentData.test).to.equal("successful");
+            expect(presentData).to.have.property("test", "successful");
         });
         it("uses base goals even when base boards aren't used", function () {
             data = boards.init(document, data);
@@ -103,7 +104,7 @@ describe("Expansion", function () {
             let presentData = {};
             document.querySelector("#base").removeAttribute("checked");
             presentData = goals.update(data, presentData, document);
-            expect(presentData.goals.length).to.equal(3);
+            expect(presentData.goals).to.have.lengthOf(3);
         });
     });
     describe("finds an expansion", function () {
@@ -200,7 +201,7 @@ describe("Expansion", function () {
             expansion.init(document, data);
             expansion.addMini(fakeMini, data, document);
             const fakeCount = document.querySelectorAll("#fakemini");
-            expect(fakeCount.length).to.equal(1);
+            expect(fakeCount).to.have.lengthOf(1);
         });
         it("doesn't add multiple of the same mini expansion", function () {
             expansion.init(document, data);
@@ -209,7 +210,7 @@ describe("Expansion", function () {
             }
             expansion.addMini(fakeMini, data, document);
             const mini = document.querySelectorAll("#fakemini");
-            expect(mini.length).to.equal(1);
+            expect(mini).to.have.lengthOf(1);
         });
     });
     describe("checks if a names mini expansion odds come true", function () {
@@ -265,7 +266,7 @@ describe("Expansion", function () {
             let presentData = {test: "should not be seen"};
             let viewData = {test: "successful test"};
             viewData = expansion.render(presentData, viewData);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
     });
     describe("view", function () {
@@ -273,7 +274,7 @@ describe("Expansion", function () {
         it("passes viewData through the view", function () {
             let viewData = {test: "successful test"};
             viewData = expansion.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
     });
 });

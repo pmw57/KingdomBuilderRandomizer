@@ -32,13 +32,13 @@ describe("Nomads", function () {
             expect(document.querySelector("#nomads")).to.equal(null);
             data = nomads.init(document, data);
             const checkbox = document.querySelector("#nomads");
-            expect(checkbox.nodeName).to.equal("INPUT");
+            expect(checkbox).to.have.tagName("INPUT");
         });
         it("doesn't add HTML code when it already exists", function () {
             data = nomads.init(document, data);
             data = nomads.init(document, data);
             const checkboxes = document.querySelectorAll("#nomads");
-            expect(checkboxes.length).to.equal(1);
+            expect(checkboxes).to.have.lengthOf(1);
         });
         it("updates data.names", function () {
             expect(data.names).to.not.include("nomads");
@@ -46,14 +46,15 @@ describe("Nomads", function () {
             expect(data.names).to.include("nomads");
         });
         it("adds Nomads boards", function () {
-            expect(data.contents.boards.nomads).to.equal(undefined);
+            expect(data.contents.boards).to.not.have.property("nomads");
             data = nomads.init(document, data);
-            expect(data.contents.boards.nomads.length).to.equal(4);
+            expect(data.contents.boards.nomads).to.have.lengthOf(4);
         });
         it("doesn't ruin nomads when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = nomads.init(document, data);
+            // innerHTML in second init used to ruin previous references
             data = {};
             data = boards.init(document, data);
             data = nomads.init(document, data);
@@ -74,7 +75,7 @@ describe("Nomads", function () {
         it("passes data to through the update", function () {
             let presentData = {test: "successful test"};
             presentData = nomads.update(data, presentData);
-            expect(presentData.test).to.equal("successful test");
+            expect(presentData).to.have.property("test", "successful test");
         });
     });
     describe("presenter", function () {
@@ -83,7 +84,7 @@ describe("Nomads", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
             viewData = nomads.render(presentData, viewData);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
     });
     describe("view", function () {
@@ -91,7 +92,7 @@ describe("Nomads", function () {
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = nomads.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
     });
 });

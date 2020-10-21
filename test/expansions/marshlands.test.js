@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../../src/boards.js");
 const marshlands = require("../../src/expansions/marshlands.js");
 const jsdom = require("jsdom");
@@ -26,13 +26,13 @@ describe("Marshlands", function () {
         it("adds checkbox to the page", function () {
             data = marshlands.init(document, data);
             const checkbox = document.querySelector("#marshlands");
-            expect(checkbox.nodeName).to.equal("INPUT");
+            expect(checkbox).to.have.tagName("INPUT");
         });
         it("doesn't duplicate HTML code", function () {
             data = marshlands.init(document, data);
             data = marshlands.init(document, data);
             const checkboxes = document.querySelectorAll("#marshlands");
-            expect(checkboxes.length).to.equal(1);
+            expect(checkboxes).to.have.lengthOf(1);
         });
         it("updates data.names", function () {
             expect(data.names).to.not.include("marshlands");
@@ -43,6 +43,7 @@ describe("Marshlands", function () {
             data = {};
             data = boards.init(document, data);
             data = marshlands.init(document, data);
+            // innerHTML in second init used to ruin previous references
             data = {};
             data = boards.init(document, data);
             data = marshlands.init(document, data);
@@ -56,7 +57,7 @@ describe("Marshlands", function () {
         it("passes data to through the update", function () {
             let presentData = {test: "successful test"};
             presentData = marshlands.update(data, presentData);
-            expect(presentData.test).to.equal("successful test");
+            expect(presentData).to.have.property("test", "successful test");
         });
     });
     describe("presenter", function () {
@@ -65,7 +66,7 @@ describe("Marshlands", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
             viewData = marshlands.render(presentData, viewData);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
     });
     describe("view", function () {
@@ -73,7 +74,7 @@ describe("Marshlands", function () {
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = marshlands.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
     });
 });

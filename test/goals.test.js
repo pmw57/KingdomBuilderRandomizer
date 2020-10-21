@@ -1,6 +1,6 @@
 /*jslint node  */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const cards = require("../src/cards.js");
 const boards = require("../src/boards.js");
 const goals = require("../src/goals.js");
@@ -59,19 +59,19 @@ describe("Goals", function () {
             data = boards.init(document, data);
             expect(document.querySelector(".goals")).to.equal(null);
             data = goals.init(document, data);
-            expect(document.querySelector(".goals").nodeName).to.equal("DIV");
-            expect(document.querySelector("#c0").nodeName).to.equal("OUTPUT");
-            expect(document.querySelector("#c1").nodeName).to.equal("OUTPUT");
-            expect(document.querySelector("#c2").nodeName).to.equal("OUTPUT");
+            expect(document.querySelector(".goals")).to.have.tagName("DIV");
+            expect(document.querySelector("#c0")).to.have.tagName("OUTPUT");
+            expect(document.querySelector("#c1")).to.have.tagName("OUTPUT");
+            expect(document.querySelector("#c2")).to.have.tagName("OUTPUT");
         });
         it("adds goals only once to the page", function () {
             data = boards.init(document, data);
             data = goals.init(document, data);
             data = goals.init(document, data);
-            expect(document.querySelectorAll(".goals").length).to.equal(1);
-            expect(document.querySelectorAll("#c0").length).to.equal(1);
-            expect(document.querySelectorAll("#c1").length).to.equal(1);
-            expect(document.querySelectorAll("#c2").length).to.equal(1);
+            expect(document.querySelectorAll(".goals")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#c0")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#c1")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#c2")).to.have.lengthOf(1);
         });
     });
     describe("update", function () {
@@ -127,9 +127,9 @@ describe("Goals", function () {
             data = {};
             const parts = [goals];
             const presentData = presenter.update(data, parts);
-            expect(presentData.goals[0].name).to.equal("");
-            expect(presentData.goals[1].name).to.equal("");
-            expect(presentData.goals[2].name).to.equal("");
+            expect(presentData.goals[0]).to.have.property("name", "");
+            expect(presentData.goals[1]).to.have.property("name", "");
+            expect(presentData.goals[2]).to.have.property("name", "");
         });
         it("shows a goal", function () {
             presenter.init();
@@ -143,7 +143,7 @@ describe("Goals", function () {
             data = {};
             const parts = [goals];
             const presentData = presenter.update(data, parts);
-            expect(presentData.goals[0].name).to.equal("Farmer");
+            expect(presentData.goals[0]).to.have.property("name", "Farmer");
         });
         it("shows goal with expansion type", function () {
             presenter.init();
@@ -157,7 +157,7 @@ describe("Goals", function () {
             data = {};
             const parts = [goals];
             const presentData = presenter.update(data, parts);
-            expect(presentData.goals[0].type).to.equal("base");
+            expect(presentData.goals[0]).to.have.property("type", "base");
         });
     });
     describe("render", function () {

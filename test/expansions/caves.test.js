@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../../src/boards.js");
 const expansion = require("../../src/expansions/expansion.js");
 const caves = require("../../src/expansions/caves.js");
@@ -23,7 +23,7 @@ describe("Caves", function () {
             }
         };
     });
-    describe("init", function () {
+    describe("errors", function () {
         it("informs you when the boards section is missing", function () {
             data = boards.init(document, data);
             document.querySelector(".boards").remove();
@@ -32,38 +32,42 @@ describe("Caves", function () {
                 () => caves.view(viewData, data.fields)
             ).to.throw("Missing boards section");
         });
+    });
+    describe("init", function () {
         it("passes data through the init", function () {
             data = {test: "successful test"};
             data = boards.init(document, data);
             data = caves.init(document, data);
-            expect(data.test).to.equal("successful test");
+            expect(data).to.have.property("test", "successful test");
         });
         it("creates a sidebar during init", function () {
             data = boards.init(document, data);
             expect(document.querySelector(".sidebar")).to.equal(null);
             data = caves.init(document, data);
             const sidebar = document.querySelector(".sidebar");
-            expect(sidebar.nodeType).to.equal(1);
+            expect(sidebar).to.have.tagName("DIV");
         });
-        it("can initializes when mini property isn't present", function () {
+        it("adds caves to mini property", function () {
             data = {};
-            expect(() => caves.init(document, data)).to.not.throw();
+            data = caves.init(document, data);
+            expect(data.mini).to.have.property("caves");
         });
         it("defaults to rules", function () {
             data = caves.init(document, data);
             const cavesRules = document.querySelector("#cavesRules");
             const cavesOdds = document.querySelector("#cavesOdds");
-            expect(cavesRules.checked).to.equal(true);
-            expect(cavesOdds.checked).to.equal(false);
+            expect(cavesRules).to.have.property("checked", true);
+            expect(cavesOdds).to.have.property("checked", false);
         });
         it("has valid caves field after multiple inits", function () {
             data = {};
             data = boards.init(document, data);
             data = caves.init(document, data);
+            // innerHTML in second init used to ruin previous references
             data = {};
             data = boards.init(document, data);
             data = caves.init(document, data);
-            expect(data.fields.caves.parentNode).to.not.equal(undefined);
+            expect(data.fields.caves.parentNode).to.have.tagName("LI");
         });
     });
     describe("update", function () {
@@ -87,7 +91,8 @@ describe("Caves", function () {
                 ]
             };
             presentData = caves.update(data, presentData);
-            expect(presentData.boards[0].cave).to.equal(undefined);
+            expect(presentData.boards[0]).to.have.property("name");
+            expect(presentData.boards[0]).to.not.have.property("cave");
         });
         it("uses caves with the Tavern", function () {
             expansion.getMinis = function () {
@@ -100,7 +105,7 @@ describe("Caves", function () {
                 ]
             };
             presentData = caves.update(data, presentData);
-            expect(presentData.boards[0].cave).to.equal(true);
+            expect(presentData.boards[0]).to.have.property("cave", true);
         });
         it("the Oasis board doesn't have caves", function () {
             expansion.getMinis = function () {
@@ -114,8 +119,8 @@ describe("Caves", function () {
                 ]
             };
             presentData = caves.update(data, presentData, document);
-            expect(presentData.boards[0].cave).to.equal(true);
-            expect(presentData.boards[1].cave).to.equal(false);
+            expect(presentData.boards[0]).to.have.property("cave", true);
+            expect(presentData.boards[1]).to.have.property("cave", false);
         });
     });
     describe("presenter", function () {
@@ -138,8 +143,8 @@ describe("Caves", function () {
             data = {};
             const parts = [caves];
             const presentData = presenter.update(data, parts);
-            expect(presentData.boards[0].name).to.equal("cavestest");
-            expect(presentData.boards[0].cave).to.equal(true);
+            expect(presentData.boards[0]).to.have.property("name", "cavestest");
+            expect(presentData.boards[0]).to.have.property("cave", true);
         });
     });
     describe("render", function () {
@@ -154,7 +159,7 @@ describe("Caves", function () {
                 test: "successful test"
             };
             viewData = caves.render(presentData, viewData);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("doesn't render a cave when it's not there", function () {
             let presentData = {
@@ -168,7 +173,7 @@ describe("Caves", function () {
                 ]
             };
             viewData = caves.render(presentData, viewData);
-            expect(viewData.boards[0].value).to.equal("viewvalue");
+            expect(viewData.boards[0]).to.have.property("value", "viewvalue");
         });
         it("renders a cave", function () {
             let presentData = {
@@ -182,7 +187,7 @@ describe("Caves", function () {
                 ]
             };
             viewData = caves.render(presentData, viewData);
-            expect(viewData.boards[0].cave).to.equal(" (Cave)");
+            expect(viewData.boards[0]).to.have.property("cave", " (Cave)");
         });
     });
     describe("view", function () {
@@ -202,7 +207,7 @@ describe("Caves", function () {
                 test: "successful test"
             };
             viewData = caves.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("adds cave to a board", function () {
             data = boards.init(document, data);
@@ -213,7 +218,7 @@ describe("Caves", function () {
             };
             viewData = caves.view(viewData, data.fields);
             const board0 = document.querySelector("#b0");
-            expect(board0.value).to.equal("test board (cave)");
+            expect(board0).to.have.property("value", "test board (cave)");
         });
     });
 });

@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const cards = require("../src/cards.js");
 
 describe("Cards", function () {
@@ -28,7 +28,7 @@ describe("Cards", function () {
     });
     it("selects some cards", function () {
         const selected = cards.draw(cardList, 2);
-        expect(selected.length).to.equal(2);
+        expect(selected).to.have.lengthOf(2);
         expect(selected[0]).to.equal("Card 1");
         expect(selected[1]).to.equal("Card 2");
     });

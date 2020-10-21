@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../src/boards.js");
 const players = require("../src/players.js");
 const jsdom = require("jsdom");
@@ -48,31 +48,31 @@ describe("Players", function () {
         it("one player means only first player is chosen", function () {
             document.getElementById("p").value = "1";
             presentData = players.update(data, presentData, document);
-            expect(presentData.startingPlayer).to.equal(1);
+            expect(presentData).to.have.property("startingPlayer", 1);
         });
-        it("with more than one player, uses low random to decide player 1 starts", function () {
+        it("uses low random to decide player 1 starts", function () {
             Math.random = () => 0;
             document.getElementById("p").value = "4";
             presentData = players.update(data, presentData, document);
-            expect(presentData.startingPlayer).to.equal(1);
+            expect(presentData).to.have.property("startingPlayer", 1);
         });
-        it("with more than one player, uses lowish random to decide player 2 starts", function () {
+        it("uses lowish random to decide player 2 starts", function () {
             Math.random = () => 0.25;
             document.getElementById("p").value = "4";
             presentData = players.update(data, presentData, document);
-            expect(presentData.startingPlayer).to.equal(2);
+            expect(presentData).to.have.property("startingPlayer", 2);
         });
-        it("with more than one player, uses middling random to decide player 3 starts", function () {
+        it("uses middling random to decide player 3 starts", function () {
             Math.random = () => 0.5;
             document.getElementById("p").value = "4";
             presentData = players.update(data, presentData, document);
-            expect(presentData.startingPlayer).to.equal(3);
+            expect(presentData).to.have.property("startingPlayer", 3);
         });
-        it("with more than one player, uses high random to decide player 4 starts", function () {
+        it("uses high random to decide player 4 starts", function () {
             Math.random = () => 0.75;
             document.getElementById("p").value = "4";
             presentData = players.update(data, presentData, document);
-            expect(presentData.startingPlayer).to.equal(4);
+            expect(presentData).to.have.property("startingPlayer", 4);
         });
     });
     describe("render", function () {
@@ -81,7 +81,7 @@ describe("Players", function () {
             const presentData = {};
             let viewData = {test: "successful test"};
             viewData = players.render(presentData, viewData);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("sets the viewData player message", function () {
             const presentData = {
@@ -89,7 +89,7 @@ describe("Players", function () {
             };
             let viewData = {};
             viewData = players.render(presentData, viewData);
-            expect(viewData.startingPlayer).to.equal("Player 1 starts");
+            expect(viewData).to.have.property("startingPlayer", "Player 1 starts");
         });
     });
     describe("view", function () {
@@ -102,7 +102,7 @@ describe("Players", function () {
         it("passes through viewData", function () {
             let viewData = {test: "successful test"};
             viewData = players.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("shows the starting player on the screen", function () {
             const viewData = {
@@ -110,7 +110,7 @@ describe("Players", function () {
             };
             players.view(viewData, data.fields);
             const chosenPlayer = document.getElementById("pc");
-            expect(chosenPlayer.textContent).to.equal("Player 1 starts");
+            expect(chosenPlayer).to.have.property("textContent", "Player 1 starts");
         });
     });
 });

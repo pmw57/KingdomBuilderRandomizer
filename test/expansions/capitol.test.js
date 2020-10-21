@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../../src/boards.js");
 const expansion = require("../../src/expansions/expansion.js");
 const capitol = require("../../src/expansions/capitol.js");
@@ -48,27 +48,29 @@ describe("Capitol", function () {
         it("creates a sidebar during init", function () {
             boards.init(document, data);
             expect(document.querySelector(".sidebar")).to.equal(null);
-            expect(() => capitol.init(document, data)).to.not.throw();
-            expect(document.querySelector(".sidebar").nodeType).to.equal(1);
+            data = capitol.init(document, data);
+            expect(document.querySelector(".sidebar")).to.have.tagName("DIV");
         });
         it("creates a capitol checkbox", function () {
             data = {};
             data = boards.init(document, data);
             expect(document.querySelector("#capitol")).to.equal(null);
             data = capitol.init(document, data);
-            expect(document.querySelector("#capitol").checked).to.equal(true);
+            const capitolCheckbox = document.querySelector("#capitol");
+            expect(capitolCheckbox).to.have.property("checked", true);
         });
         it("can initializes when mini property isn't present", function () {
-            delete data.mini;
             data = boards.init(document, data);
+            delete data.mini;
             data = capitol.init(document, data);
-            expect(Array.isArray(data.mini.capitol)).to.equal(true);
+            expect(data.mini.capitol).is.an("array");
         });
         it("can init multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = capitol.init(document, data);
             expect(data.fields.capitol.parentNode).to.not.equal(undefined);
+            // innerHTML in second init used to ruin previous references
             data = {};
             data = boards.init(document, data);
             data = capitol.init(document, data);
@@ -91,27 +93,27 @@ describe("Capitol", function () {
             let presentData = createBoardList(["Farm"]);
             presentData = capitol.update(data, presentData, document);
             const capitolData = presentData.boards[0].capitol;
-            expect(capitolData.useCapitol).to.equal(false);
+            expect(capitolData).to.have.property("useCapitol", false);
         });
         it("Adds a capitol to the Oracle board", function () {
             let presentData = createBoardList(["Oracle"]);
             presentData = capitol.update(data, presentData, document);
             const capitolData = presentData.boards[0].capitol;
-            expect(capitolData.useCapitol).to.equal(true);
+            expect(capitolData).to.have.property("useCapitol", true);
         });
         it("uses a North direction when random is less than 0.5", function () {
             Math.random = () => 0;
             let presentData = createBoardList(["Oracle"]);
             presentData = capitol.update(data, presentData, document);
             const capitolData = presentData.boards[0].capitol;
-            expect(capitolData.direction).to.equal("N");
+            expect(capitolData).to.have.property("direction", "N");
         });
         it("uses a South direction when random is more than 0.5", function () {
             Math.random = () => 0.75;
             let presentData = createBoardList(["Oracle"]);
             presentData = capitol.update(data, presentData, document);
             const capitolData = presentData.boards[0].capitol;
-            expect(capitolData.direction).to.equal("S");
+            expect(capitolData).to.have.property("direction", "S");
         });
         it("Adds a capitol to multiple valid boards", function () {
             let presentData = createBoardList(
@@ -119,10 +121,10 @@ describe("Capitol", function () {
             );
             presentData = capitol.update(data, presentData, document);
             const boardList = presentData.boards;
-            expect(boardList[0].capitol.useCapitol).to.equal(true);
-            expect(boardList[1].capitol.useCapitol).to.equal(false);
-            expect(boardList[2].capitol.useCapitol).to.equal(true);
-            expect(boardList[3].capitol.useCapitol).to.equal(false);
+            expect(boardList[0].capitol).to.have.property("useCapitol", true);
+            expect(boardList[1].capitol).to.have.property("useCapitol", false);
+            expect(boardList[2].capitol).to.have.property("useCapitol", true);
+            expect(boardList[3].capitol).to.have.property("useCapitol", false);
         });
     });
     describe("When rules are used", function () {
@@ -141,8 +143,8 @@ describe("Capitol", function () {
         it("Uses Capitol on Oracle, but not on Farm", function () {
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
-            expect(presentData.boards[0].capitol.useCapitol).to.equal(false);
-            expect(presentData.boards[1].capitol.useCapitol).to.equal(true);
+            expect(presentData.boards[0].capitol).to.have.property("useCapitol", false);
+            expect(presentData.boards[1].capitol).to.have.property("useCapitol", true);
         });
     });
     describe("When odds are used", function () {
@@ -162,18 +164,18 @@ describe("Capitol", function () {
             document.querySelector("#capitolOddsOdds").value = "0";
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
-            expect(presentData.boards[0].capitol.useCapitol).to.equal(false);
+            expect(presentData.boards[0].capitol).to.have.property("useCapitol", false);
             const capitolData = presentData.boards[1].capitol;
-            expect(capitolData.useCapitol).to.equal(false);
+            expect(capitolData).to.have.property("useCapitol", false);
         });
         it("with low odds, doesn't use capitol", function () {
             expansion.checkMiniOdds = () => false;
             document.querySelector("#capitolOddsOdds").value = "50";
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
-            expect(presentData.boards[0].capitol.useCapitol).to.equal(false);
+            expect(presentData.boards[0].capitol).to.have.property("useCapitol", false);
             const capitolData = presentData.boards[1].capitol;
-            expect(capitolData.useCapitol).to.equal(false);
+            expect(capitolData).to.have.property("useCapitol", false);
         });
         it("with high odds, uses the capitol", function () {
             expansion.checkMiniOdds = () => true;
@@ -181,17 +183,17 @@ describe("Capitol", function () {
             let presentData = createBoardList(["Farm", "Oracle"]);
             capitol.update(data, presentData, document);
             const boardList = presentData.boards;
-            expect(presentData.boards[0].capitol.useCapitol).to.equal(false);
+            expect(presentData.boards[0].capitol).to.have.property("useCapitol", false);
             const capitolData = boardList[1].capitol;
-            expect(capitolData.useCapitol).to.equal(true);
+            expect(capitolData).to.have.property("useCapitol", true);
         });
         it("with maximum, uses the capitol", function () {
             expansion.checkMiniOdds = () => true;
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
-            expect(presentData.boards[0].capitol.useCapitol).to.equal(false);
+            expect(presentData.boards[0].capitol).to.have.property("useCapitol", false);
             const capitolData = presentData.boards[1].capitol;
-            expect(capitolData.useCapitol).to.equal(true);
+            expect(capitolData).to.have.property("useCapitol", true);
         });
     });
     describe("render", function () {
@@ -218,12 +220,12 @@ describe("Capitol", function () {
         it("has no side-effect on presentData", function () {
             presentData.boards[0].capitol.useCapitol = true;
             viewData = capitol.render(presentData, viewData);
-            expect(presentData.boards[0].name).to.equal("present test");
+            expect(presentData.boards[0]).to.have.property("name", "present test");
         });
         it("doesn't show a capitol when a board doesn't have one", function () {
             presentData.boards[0].capitol.useCapitol = false;
             viewData = capitol.render(presentData, viewData);
-            expect(viewData.boards[0].capitol).to.equal("");
+            expect(viewData.boards[0]).to.have.property("capitol", "");
         });
         it("shows the capitol on a board", function () {
             presentData.boards[0].capitol.useCapitol = true;
@@ -241,7 +243,7 @@ describe("Capitol", function () {
             let viewData = {boards: []};
             viewData.test = "successful test";
             viewData = capitol.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("adds capitol to the board", function () {
             data = boards.init(document, data);
@@ -251,7 +253,7 @@ describe("Capitol", function () {
             ]};
             viewData = boards.view(viewData, data.fields);
             viewData = capitol.view(viewData, data.fields);
-            expect(board.value).to.equal("test board (Capitol N)");
+            expect(board).to.have.property("value", "test board (Capitol N)");
         });
     });
 });

@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const expansion = require("../src/expansions/expansion.js");
 const cards = require("../src/cards.js");
 const boards = require("../src/boards.js");
@@ -25,27 +25,27 @@ describe("Boards", function () {
     });
     describe("init", function () {
         it("updates data.names", function () {
-            expect(data.names).to.equal(undefined);
+            expect(data).to.not.have.property("names");
             data = boards.init(document, data);
             expect(data.names).includes("base");
         });
         it("adds boards HTML to the page", function () {
             expect(document.querySelector(".boards")).to.equal(null);
             data = boards.init(document, data);
-            expect(document.querySelector(".boards").nodeName).to.equal("DIV");
-            expect(document.querySelector("#b0").nodeName).to.equal("OUTPUT");
-            expect(document.querySelector("#b1").nodeName).to.equal("OUTPUT");
-            expect(document.querySelector("#b2").nodeName).to.equal("OUTPUT");
-            expect(document.querySelector("#b3").nodeName).to.equal("OUTPUT");
+            expect(document.querySelector(".boards")).to.have.tagName("DIV");
+            expect(document.querySelector("#b0")).to.have.tagName("OUTPUT");
+            expect(document.querySelector("#b1")).to.have.tagName("OUTPUT");
+            expect(document.querySelector("#b2")).to.have.tagName("OUTPUT");
+            expect(document.querySelector("#b3")).to.have.tagName("OUTPUT");
         });
         it("adds boards only once to the page", function () {
             data = boards.init(document, data);
             data = boards.init(document, data);
-            expect(document.querySelectorAll(".boards").length).to.equal(1);
-            expect(document.querySelectorAll("#b0").length).to.equal(1);
-            expect(document.querySelectorAll("#b1").length).to.equal(1);
-            expect(document.querySelectorAll("#b2").length).to.equal(1);
-            expect(document.querySelectorAll("#b3").length).to.equal(1);
+            expect(document.querySelectorAll(".boards")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#b0")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#b1")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#b2")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#b3")).to.have.lengthOf(1);
         });
         it("doesn't ruin boards when init'd multiple times", function () {
             data = {};
@@ -68,7 +68,7 @@ describe("Boards", function () {
             document.querySelector("#nomads").checked = false;
             let presentData = {};
             presentData = boards.update(data, presentData, document);
-            expect(presentData.boards[3].type).to.equal("base");
+            expect(presentData.boards[3]).to.have.property("type", "base");
         });
         it("is base when base is selected", function () {
             document.querySelector("#base").checked = true;
@@ -123,7 +123,7 @@ describe("Boards", function () {
             data = boards.init(document, data);
             presentData = boards.update(data, presentData, document);
             const boardList = presentData.boards;
-            expect(boardList.length).to.equal(4);
+            expect(boardList).to.have.lengthOf(4);
         });
         it("selects four random different boards", function () {
             // Here, random is replaced with reverse
@@ -133,10 +133,10 @@ describe("Boards", function () {
             data = boards.init(document, data);
             presentData = boards.update(data, presentData, document);
             const boardList = presentData.boards;
-            expect(boardList[0].name).to.equal("Paddock");
-            expect(boardList[1].name).to.equal("Harbor");
-            expect(boardList[2].name).to.equal("Barn");
-            expect(boardList[3].name).to.equal("Tavern");
+            expect(boardList[0]).to.have.property("name", "Paddock");
+            expect(boardList[1]).to.have.property("name", "Harbor");
+            expect(boardList[2]).to.have.property("name", "Barn");
+            expect(boardList[3]).to.have.property("name", "Tavern");
         });
         it("randomly flips the boards", function () {
             let presentData = {};
@@ -153,10 +153,10 @@ describe("Boards", function () {
             data = boards.init(document, data);
             presentData = boards.update(data, presentData, document);
             const boardList = presentData.boards;
-            expect(boardList[0].type).to.equal("base");
-            expect(boardList[1].type).to.equal("base");
-            expect(boardList[2].type).to.equal("base");
-            expect(boardList[3].type).to.equal("base");
+            expect(boardList[0]).to.have.property("type", "base");
+            expect(boardList[1]).to.have.property("type", "base");
+            expect(boardList[2]).to.have.property("type", "base");
+            expect(boardList[3]).to.have.property("type", "base");
         });
     });
     describe("boards presenter", function () {
@@ -174,17 +174,17 @@ describe("Boards", function () {
             Math.random = () => 0;
             const parts = [boards];
             const presentData = presenter.update(data, parts, document);
-            expect(presentData.boards[0].name).to.equal("Farm");
-            expect(presentData.boards[1].name).to.equal("Oasis");
-            expect(presentData.boards[2].name).to.equal("Tower");
-            expect(presentData.boards[3].name).to.equal("Tavern");
+            expect(presentData.boards[0]).to.have.property("name", "Farm");
+            expect(presentData.boards[1]).to.have.property("name", "Oasis");
+            expect(presentData.boards[2]).to.have.property("name", "Tower");
+            expect(presentData.boards[3]).to.have.property("name", "Tavern");
         });
         it("presents the board type", function () {
             data = {};
             data = boards.init(document, data);
             const parts = [boards];
             const presentData = presenter.update(data, parts, document);
-            expect(presentData.boards[0].type).to.equal("base");
+            expect(presentData.boards[0]).to.have.property("type", "base");
         });
         it("presents a flipped board", function () {
             data = {};
@@ -192,7 +192,7 @@ describe("Boards", function () {
             Math.random = () => 0.99;
             const parts = [boards];
             const presentData = presenter.update(data, parts, document);
-            expect(presentData.boards[0].flipped).to.equal(true);
+            expect(presentData.boards[0]).to.have.property("flipped", true);
         });
     });
 });

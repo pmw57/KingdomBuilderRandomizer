@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../../src/boards.js");
 const island = require("../../src/expansions/island.js");
 const presenter = require("../../src/presenter.js");
@@ -44,19 +44,20 @@ describe("Island", function () {
             expect(document.querySelector("#i0")).to.equal(null);
             data = island.init(document, data);
             const checkbox = document.querySelector("#i0");
-            expect(checkbox.nodeName).to.equal("OUTPUT");
+            expect(checkbox).to.have.tagName("OUTPUT");
         });
         it("adds island only once to the page", function () {
             data = boards.init(document, data);
             data = island.init(document, data);
             data = island.init(document, data);
             const islandCheckboxes = document.querySelectorAll("#i0");
-            expect(islandCheckboxes.length).to.equal(1);
+            expect(islandCheckboxes).to.have.lengthOf(1);
         });
         it("doesn't ruin island when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = island.init(document, data);
+            // innerHTML in second init used to ruin previous references
             data = {};
             data = boards.init(document, data);
             data = island.init(document, data);
@@ -98,39 +99,38 @@ describe("Island", function () {
             if (presentData.island) {
                 delete presentData.island;
             }
-            expect(presentData.island).to.equal(undefined);
+            expect(presentData).to.not.have.property("island");
             presentData = island.update(data, presentData, document);
-            expect(presentData.island).to.not.equal(undefined);
-            expect(presentData.island).to.be.an("object");
+            expect(presentData).to.have.property("island");
         });
         it("doesn't use island when expansion isn't checked", function () {
             document.querySelector("#island").checked = false;
             presentData = island.update(data, presentData, document);
-            expect(presentData.island.useIsland).to.equal(false);
+            expect(presentData.island).to.have.property("useIsland", false);
         });
         it("doesn't use island when boards don't support it", function () {
             presentData = {boards: [{name: "Board 1"}, {name: "Board 2"}]};
             data = island.init(document, data);
             presentData = island.update(data, presentData, document);
-            expect(presentData.island.useIsland).to.equal(false);
+            expect(presentData.island).to.have.property("useIsland", false);
         });
         it("decides if an island is to be used", function () {
             data = island.init(document, data);
             presentData = island.update(data, presentData, document);
-            expect(presentData.island.useIsland).to.equal(true);
+            expect(presentData.island).to.have.property("useIsland", true);
         });
         it("chooses flipped with a high random value", function () {
             Math.random = () => 0.75;
             data = island.init(document, data);
             presentData = island.update(data, presentData, document);
-            expect(presentData.island.flipped).to.equal(true);
+            expect(presentData.island).to.have.property("flipped", true);
         });
         it("chooses unflipped with a low random value", function () {
             document.querySelector(".sidebar");
             Math.random = () => 0.25;
             data = island.init(document, data);
             presentData = island.update(data, presentData, document);
-            expect(presentData.island.flipped).to.equal(false);
+            expect(presentData.island).to.have.property("flipped", false);
         });
     });
     function resetIsland() {
@@ -200,7 +200,7 @@ describe("Island", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
             viewData = island.render(presentData, viewData);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("empties the island field", function () {
             data = {};
@@ -211,7 +211,7 @@ describe("Island", function () {
             };
             let viewData = {};
             viewData = island.render(presentData, viewData);
-            expect(viewData.island.value).to.equal("");
+            expect(viewData.island).to.have.property("value", "");
         });
         it("shows the island", function () {
             const presentData = {
@@ -223,7 +223,7 @@ describe("Island", function () {
             data = {};
             let viewData = {};
             viewData = island.render(presentData, viewData);
-            expect(viewData.island.value).to.equal("Island");
+            expect(viewData.island).to.have.property("value", "Island");
         });
         it("shows a flipped island", function () {
             const presentData = {
@@ -235,7 +235,7 @@ describe("Island", function () {
             data = {};
             let viewData = {};
             viewData = island.render(presentData, viewData);
-            expect(viewData.island.value).to.equal("Island (↷)");
+            expect(viewData.island).to.have.property("value", "Island (↷)");
         });
     });
     describe("view", function () {
@@ -248,7 +248,7 @@ describe("Island", function () {
                 test: "successful test"
             };
             viewData = island.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
     });
 });

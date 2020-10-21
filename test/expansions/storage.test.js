@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const storage = require("../../src/storage.js");
 const boards = require("../../src/boards.js");
 const nomads = require("../../src/expansions/nomads.js");
@@ -59,9 +59,9 @@ describe("Storage", function () {
             storage.init(fakeDoc);
             const checkbox = document.querySelector("#nomads");
             checkbox.setAttribute("checked", "checked");
-            expect(checkbox.checked).to.equal(true);
+            expect(checkbox).to.have.property("checked", true);
             storage.update();
-            expect(checkbox.checked).to.equal(false);
+            expect(checkbox).to.have.property("checked", false);
         });
         it("can update radio", function () {
             let data = {};
@@ -73,11 +73,11 @@ describe("Storage", function () {
             const radio1 = document.querySelector("#cavesRules");
             const radio2 = document.querySelector("#cavesOdds");
             radio2.click();
-            expect(radio1.checked).to.equal(false);
-            expect(radio2.checked).to.equal(true);
+            expect(radio1).to.have.property("checked", false);
+            expect(radio2).to.have.property("checked", true);
             storage.update();
-            expect(radio1.checked).to.equal(true);
-            expect(radio2.checked).to.equal(false);
+            expect(radio1).to.have.property("checked", true);
+            expect(radio2).to.have.property("checked", false);
         });
     });
     describe("monitor", function () {

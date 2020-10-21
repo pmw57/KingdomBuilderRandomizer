@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../src/boards.js");
 const view = require("../src/view.js");
 const jsdom = require("jsdom");
@@ -60,7 +60,7 @@ describe("View", function () {
             board1.setAttribute("class", "");
             const parts = [boards];
             view.update(presentData, parts, data.fields);
-            expect(board1.value).to.equal("Tavern");
+            expect(board1).to.have.property("value", "Tavern");
             expect(board1.getAttribute("class")).to.equal("base");
         });
     });

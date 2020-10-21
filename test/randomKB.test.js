@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const randomKB = require("../src/randomKB.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");

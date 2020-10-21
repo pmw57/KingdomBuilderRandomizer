@@ -1,6 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
-const expect = require("chai").expect;
+const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../../src/boards.js");
 const crossroads = require("../../src/expansions/crossroads.js");
 const presenter = require("../../src/presenter.js");
@@ -43,25 +43,26 @@ describe("Crossroads", function () {
         it("adds tasks HTML to the page", function () {
             expect(document.querySelector(".tasks")).to.equal(null);
             data = crossroads.init(document, data);
-            expect(document.querySelectorAll("#t0").length).to.equal(1);
-            expect(document.querySelectorAll("#t1").length).to.equal(1);
-            expect(document.querySelectorAll("#t2").length).to.equal(1);
-            expect(document.querySelectorAll("#t3").length).to.equal(1);
+            expect(document.querySelectorAll("#t0")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#t1")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#t2")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#t3")).to.have.lengthOf(1);
         });
         it("adds tasks only once to the page", function () {
             data = crossroads.init(document, data);
             data = crossroads.init(document, data);
             const tasks = document.querySelectorAll(".tasks");
-            expect(tasks.length).to.equal(1);
-            expect(document.querySelectorAll("#t0").length).to.equal(1);
-            expect(document.querySelectorAll("#t1").length).to.equal(1);
-            expect(document.querySelectorAll("#t2").length).to.equal(1);
-            expect(document.querySelectorAll("#t3").length).to.equal(1);
+            expect(tasks).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#t0")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#t1")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#t2")).to.have.lengthOf(1);
+            expect(document.querySelectorAll("#t3")).to.have.lengthOf(1);
         });
         it("doesn't ruin tasks when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
             data = crossroads.init(document, data);
+            // innerHTML in second init used to ruin previous references
             data = {};
             data = boards.init(document, data);
             data = crossroads.init(document, data);
@@ -73,15 +74,15 @@ describe("Crossroads", function () {
             data = crossroads.init(document, data);
             document.querySelector(".expansions").remove();
             const expansionsBefore = document.querySelectorAll(".expansions");
-            expect(expansionsBefore.length).to.equal(0);
+            expect(expansionsBefore).to.have.lengthOf(0);
             data = crossroads.init(document, data);
             const expansionsAfter = document.querySelectorAll(".expansions");
-            expect(expansionsAfter.length).to.equal(1);
+            expect(expansionsAfter).to.have.lengthOf(1);
         });
         it("adds Crossroads to expansions section", function () {
             data = crossroads.init(document, data);
             const checkbox = document.querySelectorAll("#crossroads");
-            expect(checkbox.length).to.equal(1);
+            expect(checkbox).to.have.lengthOf(1);
         });
     });
     describe("update", function () {
@@ -102,8 +103,7 @@ describe("Crossroads", function () {
             };
             data = crossroads.init(document, data);
             presentData = crossroads.update(data, presentData);
-            const boardsLength = presentData.boards.length;
-            expect(presentData.tasks.length).to.equal(boardsLength);
+            expect(presentData.tasks).to.have.lengthOf(2);
         });
         it("one task board means one task", function () {
             Math.random = () => 0.5;
@@ -115,8 +115,8 @@ describe("Crossroads", function () {
             };
             data = crossroads.init(document, data);
             presentData = crossroads.update(data, presentData);
-            expect(presentData.tasks[0].type).to.equal("crossroads");
-            expect(presentData.tasks[1].name).to.equal("");
+            expect(presentData.tasks[0]).to.have.property("type", "crossroads");
+            expect(presentData.tasks[1]).to.have.property("type", "");
         });
     });
     describe("render", function () {
@@ -125,7 +125,7 @@ describe("Crossroads", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
             viewData = crossroads.render(presentData, viewData);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("renders the tasks", function () {
             const presentData = {
@@ -138,8 +138,8 @@ describe("Crossroads", function () {
             };
             let viewData = {};
             viewData = crossroads.render(presentData, viewData);
-            expect(viewData.tasks[0].value).equal("Test task");
-            expect(viewData.tasks[0].className).equal("test");
+            expect(viewData.tasks[0]).to.have.property("value", "Test task");
+            expect(viewData.tasks[0]).to.have.property("className", "test");
         });
     });
     describe("tasks presenter", function () {
@@ -165,9 +165,9 @@ describe("Crossroads", function () {
             data = {};
             const parts = [crossroads];
             const presentData = presenter.update(data, parts);
-            expect(presentData.tasks[0].name).to.equal("");
-            expect(presentData.tasks[1].name).to.equal("");
-            expect(presentData.tasks[2].name).to.equal("");
+            expect(presentData.tasks[0]).to.have.property("name", "");
+            expect(presentData.tasks[1]).to.have.property("name", "");
+            expect(presentData.tasks[2]).to.have.property("name", "");
         });
         it("shows a task", function () {
             crossroads.update = function () {
@@ -180,8 +180,8 @@ describe("Crossroads", function () {
             data = {};
             const parts = [crossroads];
             const presentData = presenter.update(data, parts);
-            expect(presentData.tasks[0].name).to.equal("Road");
-            expect(presentData.tasks[0].type).to.equal("crossroads");
+            expect(presentData.tasks[0]).to.have.property("name", "Road");
+            expect(presentData.tasks[0]).to.have.property("type", "crossroads");
         });
     });
     describe("view", function () {
@@ -189,7 +189,7 @@ describe("Crossroads", function () {
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = crossroads.view(viewData, data.fields);
-            expect(viewData.test).to.equal("successful test");
+            expect(viewData).to.have.property("test", "successful test");
         });
         it("shows tasks", function () {
             let viewData = {
@@ -203,7 +203,7 @@ describe("Crossroads", function () {
             crossroads.init(document, data);
             viewData = crossroads.view(viewData, data.fields);
             const task1 = document.querySelector("#t0");
-            expect(task1.value).to.equal("test task 1");
+            expect(task1).to.have.property("value", "test task 1");
         });
     });
 });
