@@ -68,12 +68,6 @@ const expansion = (function () {
             return data;
 
         }
-        if (!data) {
-            throw new ReferenceError("Missing data object");
-        }
-        if (!document) {
-            throw new ReferenceError("Missing document reference");
-        }
         html.init(document);
         data.fields = data.fields || {};
         addExpansionsContainer(document);

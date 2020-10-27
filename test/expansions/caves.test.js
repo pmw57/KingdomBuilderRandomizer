@@ -23,16 +23,6 @@ describe("Caves", function () {
             }
         };
     });
-    describe("errors", function () {
-        it("informs you when the boards section is missing", function () {
-            data = boards.init(document, data);
-            document.querySelector(".boards").remove();
-            const viewData = {};
-            expect(
-                () => caves.view(viewData, data.fields)
-            ).to.throw("Missing boards section");
-        });
-    });
     describe("init", function () {
         it("passes data through the init", function () {
             data = {test: "successful test"};

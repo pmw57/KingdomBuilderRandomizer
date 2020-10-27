@@ -37,17 +37,6 @@ describe("Expansion", function () {
             }
         };
     });
-    describe("errors", function () {
-        it("throws an error when given no data", function () {
-            expect(() => expansion.init()).to.throw("Missing data");
-        });
-        it("throws an error when document not provided", function () {
-            const noDocument = undefined;
-            expect(
-                () => expansion.init(noDocument, data)
-            ).to.throw("Missing document");
-        });
-    });
     describe("register", function () {
         it("can register an expansion", function () {
             const list = expansion.registerExpansions(["nomads"]);

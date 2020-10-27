@@ -15,12 +15,6 @@ const capitol = (function iife() {
             }, data, document);
             return data;
         }
-        if (!data || !data.contents) {
-            throw new ReferenceError("Missing boards data");
-        }
-        if (!document.querySelector(".boards")) {
-            throw new ReferenceError("Missing boards HTML");
-        }
         if (!document.querySelector(".sidebar ul")) {
             data = expansion.init(document, data);
         }

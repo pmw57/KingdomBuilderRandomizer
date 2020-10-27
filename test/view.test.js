@@ -33,14 +33,6 @@ describe("View", function () {
             ]
         };
     });
-    describe("errors", function () {
-        it("throws error when presentData is missing", function () {
-            presentData = undefined;
-            expect(
-                () => view.update(presentData)
-            ).to.throw("Missing presentData");
-        });
-    });
     // TODO tidy
     describe("show", function () {
         it("returns true after updating the view", function () {

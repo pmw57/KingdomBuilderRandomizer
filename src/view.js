@@ -9,9 +9,6 @@ const view = (function makeView() {
         return viewData;
     }
     function newUpdateView(presentData, parts, fields) {
-        if (!presentData) {
-            throw new Error("Missing presentData object");
-        }
         const viewData = renderView(parts, presentData);
         parts.forEach(function (part) {
             part.view(viewData, fields);

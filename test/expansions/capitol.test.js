@@ -22,58 +22,63 @@ describe("Capitol", function () {
             })
         };
     }
-    describe("errors", function () {
-        it("throws an error when given no data", function () {
-            expect(() => capitol.init()).to.throw("Missing boards data");
-        });
-        it("throws an error when no boards data", function () {
-            expect(() => capitol.init({})).to.throw("Missing boards data");
-        });
-        it("lets you know when the boards section is missing", function () {
-            let data = {
-                contents: {
-                    boards: []
-                }
-            };
-            expect(
-                () => capitol.init(document, data)
-            ).to.throw("Missing boards HTML");
-        });
-    });
+    function addCapitol(data) {
+        data.mini = data.mini || {};
+        data.mini.capitol = ["Oracle", "Harbor"];
+        data.fields = data.fields || {};
+        const capitolCheckbox = document.createElement("input");
+        capitolCheckbox.id = "capitol";
+        capitolCheckbox.checked = true;
+        data.fields.capitol = capitolCheckbox;
+        const rulesCheckbox = document.createElement("input");
+        rulesCheckbox.id = "capitolRules";
+        rulesCheckbox.checked = true;
+        data.fields.capitolRules = rulesCheckbox;
+        const oddsChecked = document.createElement("input");
+        oddsChecked.id = "capitolRules";
+        oddsChecked.checked = false;
+        data.fields.capitolOdds = oddsChecked;
+        const oddsOdds = document.createElement("input");
+        rulesCheckbox.id = "capitolOddsOdds";
+        data.fields.capitolOddsOdds = oddsOdds;
+        data.fields.board0 = {value: ""};
+        return data;
+    }
     describe("init", function () {
         let data;
         beforeEach(function () {
-            data = {};
+            data = {
+                contents: {
+                    boards: {}
+                }
+            };
+            const content = document.createElement("div");
+            content.classList.add("content");
+            const boards = document.createElement("div");
+            boards.classList.add("boards");
+            document.body.appendChild(content);
+            content.appendChild(boards);
         });
         it("creates a sidebar during init", function () {
-            boards.init(document, data);
             expect(document.querySelector(".sidebar")).to.equal(null);
             data = capitol.init(document, data);
             expect(document.querySelector(".sidebar")).to.have.tagName("DIV");
         });
         it("creates a capitol checkbox", function () {
-            data = {};
-            data = boards.init(document, data);
-            expect(document.querySelector("#capitol")).to.equal(null);
             data = capitol.init(document, data);
             const capitolCheckbox = document.querySelector("#capitol");
             expect(capitolCheckbox).to.have.property("checked", true);
         });
         it("can initializes when mini property isn't present", function () {
-            data = boards.init(document, data);
             delete data.mini;
             data = capitol.init(document, data);
             expect(data.mini.capitol).is.an("array");
         });
         it("can init multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
             data = capitol.init(document, data);
             let capitolField = data.fields.capitol;
             expect(capitolField.parentNode).to.not.equal(undefined);
             // innerHTML in second init used to ruin previous references
-            data = {};
-            data = boards.init(document, data);
             data = capitol.init(document, data);
             capitolField = data.fields.capitol;
             expect(capitolField.parentNode).to.not.equal(undefined);

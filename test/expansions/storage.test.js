@@ -37,18 +37,7 @@ describe("Storage", function () {
             expect(() => storage.set("testKey")).to.not.throw();
         });
     });
-    describe("get", function () {
-        it("throws error when key not found", function () {
-            storage.set("testKey", "test value");
-            const result = storage.get("testKey");
-            expect(result).to.equal("test value");
-        });
-    });
     describe("update", function () {
-        it("throws an error when no storage", function () {
-            storage.init({defaultView: {}});
-            expect(() => storage.update()).to.throw("No storage");
-        });
         it("can update checkbox", function () {
             let data = {};
             data = boards.init(document, data);

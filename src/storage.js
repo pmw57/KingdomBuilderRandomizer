@@ -39,9 +39,6 @@ const storageModule = (function iife() {
                 }
             });
         }
-        if (!storage) {
-            throw new Error("No storage!");
-        }
         document.querySelectorAll("input").forEach(function (field) {
             const updateType = {
                 default: updateTextField,

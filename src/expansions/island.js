@@ -9,9 +9,6 @@ const island = (function () {
     const islandBoards = ["Harbor", "Lighthouse"];
     function initIsland(document, data) {
         function addIslandHTML(data) {
-            if (!document.querySelector(".boards")) {
-                throw new Error("Missing boards section");
-            }
             const boards = document.querySelector(".boards");
             const islandField = html.create("output", {type: "text", id: "i0"});
             boards.appendChild(islandField);

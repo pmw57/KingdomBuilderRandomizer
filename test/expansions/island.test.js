@@ -30,14 +30,6 @@ describe("Island", function () {
             mini: {}
         };
     });
-    describe("errors", function () {
-        it("throws an error when the boards section is missing", function () {
-            data = {};
-            expect(
-                () => island.init(document, data)
-            ).to.throw("Missing boards section");
-        });
-    });
     describe("init", function () {
         it("adds island HTML to the page", function () {
             data = boards.init(document, data);

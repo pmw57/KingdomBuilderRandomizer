@@ -42,9 +42,6 @@ const goals = (function iife() {
             data.fields.goal2 = document.querySelector("#c2");
             return data;
         }
-        if (!document) {
-            throw new ReferenceError("Missing document reference");
-        }
         data = addGoalsHTML(data);
         data.contents = data.contents || {};
         data.contents.goals = data.contents.goals || {};

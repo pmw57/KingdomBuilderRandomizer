@@ -28,15 +28,6 @@ describe("Goals", function () {
             }
         };
     });
-    describe("errors", function () {
-        it("throws an error when no document", function () {
-            const noDocument = undefined;
-            data = {};
-            expect(
-                () => goals.init(noDocument, data)
-            ).to.throw("Missing document");
-        });
-    });
     describe("init", function () {
         it("adds contents property to data if missing", function () {
             data = boards.init(document, data);
