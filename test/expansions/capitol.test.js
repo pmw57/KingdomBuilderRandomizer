@@ -1,14 +1,13 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const boards = require("../../src/boards.js");
 const expansion = require("../../src/expansions/expansion.js");
 const capitol = require("../../src/expansions/capitol.js");
 const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
 const {JSDOM} = jsdom;
 
-describe("Capitol", function () {
+describe("Capitol Unit tests", function () {
     "use strict";
     let document;
     beforeEach(function () {
@@ -89,12 +88,15 @@ describe("Capitol", function () {
         let cacheRandom;
         beforeEach(function () {
             data = {};
-            data = boards.init(document, data);
-            data = capitol.init(document, data);
+            data = addCapitol(data);
             cacheRandom = Math.random;
         });
         afterEach(function () {
             Math.random = cacheRandom;
+        });
+        it("uses capitol input field", function () {
+            let presentData = {boards: []};
+            capitol.update(data, presentData, document);
         });
         it("Doesn't add a capitol when map has only one castle", function () {
             let presentData = createBoardList(["Farm"]);
@@ -139,9 +141,7 @@ describe("Capitol", function () {
         let cachedCheckMiniOdds;
         beforeEach(function () {
             data = {};
-            data = boards.init(document, data);
-            data = capitol.init(document, data);
-            document.querySelector("#capitolRules").checked = true;
+            data = addCapitol(data);
             cachedCheckMiniOdds = expansion.checkMiniOdds;
         });
         afterEach(function () {
@@ -157,29 +157,37 @@ describe("Capitol", function () {
     });
     describe("When odds are used", function () {
         let data;
+        let rulesField;
+        let oddsField;
+        let oddsOdds;
         let cachedCheckMiniOdds;
         beforeEach(function () {
             data = {};
-            data = boards.init(document, data);
-            data = capitol.init(document, data);
-            document.querySelector("#capitolOdds").checked = true;
+            data = addCapitol(data);
+            rulesField = data.fields.capitolRules;
+            rulesField.checked = false;
+            oddsField = data.fields.capitolOdds;
+            oddsField.checked = true;
+            oddsOdds = data.fields.capitolOddsOdds;
+            oddsOdds.value = "50";
             cachedCheckMiniOdds = expansion.checkMiniOdds;
         });
         afterEach(function () {
             expansion.checkMiniOdds = cachedCheckMiniOdds;
         });
         it("with zero odds, doesn't use capitol", function () {
-            document.querySelector("#capitolOddsOdds").value = "0";
+            oddsOdds.value = "0";
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
             const boardsList = presentData.boards;
-            expect(boardsList[0].capitol).to.have.property("useCapitol", false);
-            const capitolData = boardsList[1].capitol;
+            let capitolData = boardsList[0].capitol;
+            expect(capitolData).to.have.property("useCapitol", false);
+            capitolData = boardsList[1].capitol;
             expect(capitolData).to.have.property("useCapitol", false);
         });
         it("with low odds, doesn't use capitol", function () {
             expansion.checkMiniOdds = () => false;
-            document.querySelector("#capitolOddsOdds").value = "50";
+            oddsOdds.value = "50";
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
             const boardsList = presentData.boards;
@@ -189,7 +197,7 @@ describe("Capitol", function () {
         });
         it("with high odds, uses the capitol", function () {
             expansion.checkMiniOdds = () => true;
-            document.querySelector("#capitolOddsOdds").value = "50";
+            oddsOdds.value = "50";
             let presentData = createBoardList(["Farm", "Oracle"]);
             capitol.update(data, presentData, document);
             const boardsList = presentData.boards;
@@ -250,6 +258,7 @@ describe("Capitol", function () {
         let data;
         beforeEach(function () {
             data = {};
+            data = addCapitol(data);
         });
         it("passes through viewData", function () {
             let viewData = {boards: []};
@@ -258,14 +267,14 @@ describe("Capitol", function () {
             expect(viewData).to.have.property("test", "successful test");
         });
         it("adds capitol to the board", function () {
-            data = boards.init(document, data);
-            const board = document.querySelector("#b0");
+            data.fields.board0 = {value: ""};
+            data = addCapitol(data);
+            const board = data.fields.board0;
             let viewData = {boards: [
                 {value: "test board", capitol: " (Capitol N)"}
             ]};
-            viewData = boards.view(viewData, data.fields);
             viewData = capitol.view(viewData, data.fields);
-            expect(board).to.have.property("value", "test board (Capitol N)");
+            expect(board).to.have.property("value", " (Capitol N)");
         });
     });
 });
