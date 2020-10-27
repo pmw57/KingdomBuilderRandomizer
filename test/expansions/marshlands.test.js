@@ -48,12 +48,10 @@ describe("Marshlands", function () {
             data = boards.init(document, data);
             data = marshlands.init(document, data);
             const checkboxField = data.fields.marshlands;
-            const parentName = checkboxField.parentNode.constructor.name;
-            expect(parentName).to.equal("HTMLLIElement");
+            expect(checkboxField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {
-        // TODO tidy
         it("passes data to through the update", function () {
             let presentData = {test: "successful test"};
             presentData = marshlands.update(data, presentData);
@@ -61,7 +59,6 @@ describe("Marshlands", function () {
         });
     });
     describe("presenter", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
@@ -70,7 +67,6 @@ describe("Marshlands", function () {
         });
     });
     describe("view", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = marshlands.view(viewData, data.fields);

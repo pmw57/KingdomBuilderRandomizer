@@ -13,9 +13,9 @@ describe("Cards", function () {
             return 0;
         };
     });
-    // TODO tidy
     it("shuffles the provided cards", function () {
         const cachedRandom = Math.random;
+        // replace random function for reliable testing
         Math.random = randomTestStub;
         const shuffled = cards.shuffle(cardList);
         Math.random = cachedRandom;

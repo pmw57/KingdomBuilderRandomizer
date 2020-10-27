@@ -67,8 +67,7 @@ describe("Crossroads", function () {
             data = boards.init(document, data);
             data = crossroads.init(document, data);
             const task0 = data.fields.task0;
-            const parentName = task0.parentNode.constructor.name;
-            expect(parentName).to.equal("HTMLDivElement");
+            expect(task0.parentNode).to.not.equal(undefined);
         });
         it("adds expansions section", function () {
             data = crossroads.init(document, data);
@@ -86,7 +85,6 @@ describe("Crossroads", function () {
         });
     });
     describe("update", function () {
-        // TODO tidy
         let cacheRandom;
         beforeEach(function () {
             cacheRandom = Math.random;
@@ -97,30 +95,32 @@ describe("Crossroads", function () {
         it("no task boards means no tasks", function () {
             let presentData = {
                 boards: [
-                    {name: "Tavern"},
-                    {name: "Barn"}
+                    {name: "Test Board 1"},
+                    {name: "Test Board 2"}
                 ]
             };
             data = crossroads.init(document, data);
             presentData = crossroads.update(data, presentData);
-            expect(presentData.tasks).to.have.lengthOf(2);
+            const taskList = presentData.tasks;
+            expect(taskList[0]).to.have.property("type", "");
+            expect(taskList[1]).to.have.property("type", "");
         });
         it("one task board means one task", function () {
             Math.random = () => 0.5;
             let presentData = {
                 boards: [
-                    {name: "Tavern"},
+                    {name: "Test Board"},
                     {name: "Lighthouse"}
                 ]
             };
             data = crossroads.init(document, data);
             presentData = crossroads.update(data, presentData);
-            expect(presentData.tasks[0]).to.have.property("type", "crossroads");
-            expect(presentData.tasks[1]).to.have.property("type", "");
+            const taskList = presentData.tasks;
+            expect(taskList[0]).to.have.property("type", "crossroads");
+            expect(taskList[1]).to.have.property("type", "");
         });
     });
     describe("render", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
@@ -143,17 +143,16 @@ describe("Crossroads", function () {
         });
     });
     describe("tasks presenter", function () {
-        // TODO tidy
         let crossroadsUpdate;
         beforeEach(function () {
             crossroadsUpdate = crossroads.update;
-            presenter.init();
+            presenter.init(document, data);
         });
         afterEach(function () {
             crossroads.update = crossroadsUpdate;
         });
         it("empties tasks", function () {
-            crossroads.update = function () {
+            crossroads.update = function fakeUpdate() {
                 return {
                     tasks: [
                         {name: "", type: ""},
@@ -185,7 +184,6 @@ describe("Crossroads", function () {
         });
     });
     describe("view", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = crossroads.view(viewData, data.fields);
@@ -194,7 +192,7 @@ describe("Crossroads", function () {
         it("shows tasks", function () {
             let viewData = {
                 tasks: [
-                    {value: "test task 1", className: ""},
+                    {value: "test task", className: ""},
                     {value: "", className: ""},
                     {value: "", className: ""},
                     {value: "", className: ""}
@@ -203,7 +201,8 @@ describe("Crossroads", function () {
             crossroads.init(document, data);
             viewData = crossroads.view(viewData, data.fields);
             const task1 = document.querySelector("#t0");
-            expect(task1).to.have.property("value", "test task 1");
+            expect(task1).to.have.tagName("OUTPUT");
+            expect(task1).to.have.property("value", "test task");
         });
     });
 });

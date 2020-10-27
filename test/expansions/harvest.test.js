@@ -35,9 +35,9 @@ describe("Harvest", function () {
             expect(checkboxes).to.have.lengthOf(1);
         });
         it("updates data.names", function () {
-            expect(data.names.includes("harvest")).to.equal(false);
+            expect(data.names).to.not.include("harvest");
             data = harvest.init(document, data);
-            expect(data.names.includes("harvest")).to.equal(true);
+            expect(data.names).to.include("harvest");
         });
         it("doesn't ruin harvest when init'd multiple times", function () {
             data = {};
@@ -48,12 +48,10 @@ describe("Harvest", function () {
             data = boards.init(document, data);
             data = harvest.init(document, data);
             const harvestField = data.fields.harvest;
-            const parentName = harvestField.parentNode.constructor.name;
-            expect(parentName).to.equal("HTMLLIElement");
+            expect(harvestField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {
-        // TODO tidy
         it("passes data to through the update", function () {
             let presentData = {test: "successful test"};
             presentData = harvest.update(data, presentData);
@@ -61,7 +59,6 @@ describe("Harvest", function () {
         });
     });
     describe("presenter", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             const presentData = {test: "Should not be seen"};
             let viewData = {test: "successful test"};
@@ -70,7 +67,6 @@ describe("Harvest", function () {
         });
     });
     describe("view", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             let viewData = {test: "successful test"};
             viewData = harvest.view(viewData, data.fields);

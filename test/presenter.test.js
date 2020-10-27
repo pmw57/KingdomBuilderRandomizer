@@ -13,7 +13,6 @@ describe("Presenter", function () {
         document = new JSDOM(docpage).window.document;
     });
     describe("presents boards", function () {
-        // TODO tidy
         it("updates from a list of parts", function () {
             presenter.init();
             const partStub = {

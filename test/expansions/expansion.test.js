@@ -77,6 +77,15 @@ describe("Expansion", function () {
             const base = document.querySelector("#base");
             expect(base).to.have.tagName("INPUT");
         });
+        it("uses base goals even when base boards are deselected", function () {
+            data = boards.init(document, data);
+            data = goals.init(document, data);
+            data = expansion.init(document, data);
+            let presentData = {};
+            document.querySelector("#base").removeAttribute("checked");
+            presentData = goals.update(data, presentData, document);
+            expect(presentData.goals).to.have.lengthOf(3);
+        });
         it("doesn't ruin base when init'd multiple times", function () {
             data = {};
             data = boards.init(document, data);
@@ -86,29 +95,17 @@ describe("Expansion", function () {
             data = boards.init(document, data);
             data = expansion.init(document, data);
             const baseField = data.fields.base;
-            const parentName = baseField.parentNode.constructor.name;
-            expect(parentName).to.equal("HTMLLIElement");
+            expect(baseField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {
-        // TODO tidy
         it("passes through playerData", function () {
             let presentData = {test: "successful"};
             presentData = expansion.update(presentData);
             expect(presentData).to.have.property("test", "successful");
         });
-        it("uses base goals even when base boards aren't used", function () {
-            data = boards.init(document, data);
-            data = goals.init(document, data);
-            data = expansion.init(document, data);
-            let presentData = {};
-            document.querySelector("#base").removeAttribute("checked");
-            presentData = goals.update(data, presentData, document);
-            expect(presentData.goals).to.have.lengthOf(3);
-        });
     });
     describe("finds an expansion", function () {
-        // TODO tidy
         it("finds a base board", function () {
             expansion.init(document, data);
             const expansionName = expansion.findExpansion(
@@ -121,24 +118,18 @@ describe("Expansion", function () {
         });
     });
     describe("gets the active expansions", function () {
-        // TODO tidy
         beforeEach(function () {
-            document.querySelectorAll(".expansions").forEach(
-                (el) => el.remove()
-            );
             boards.init(document, data);
             nomads.init(document, data);
             capitol.init(document, data);
         });
-        it("with no expansions, defaults to only the base", function () {
-            expansion.init(document, data);
+        it("with no expansions ticked, defaults to only the base", function () {
             document.querySelector("#base").checked = false;
             document.querySelector("#nomads").checked = false;
             const activeExpansions = expansion.getActive(data, document);
             expect(activeExpansions).to.eql(["base"]);
         });
         it("with one expansion ticked, gives that expansion", function () {
-            expansion.init(document, data);
             document.querySelector("#base").checked = false;
             document.querySelector("#nomads").checked = true;
             const activeExpansions = expansion.getActive(data, document);
@@ -151,12 +142,8 @@ describe("Expansion", function () {
             expect(activeExpansions).to.eql(["base", "nomads"]);
         });
     });
-    describe("gets the mini expansion settings", function () {
-        // TODO tidy
+    describe("mini expansions", function () {
         beforeEach(function () {
-            document.querySelectorAll(".expansions").forEach(
-                (el) => el.remove()
-            );
             boards.init(document, data);
             capitol.init(document, data);
         });
@@ -164,16 +151,14 @@ describe("Expansion", function () {
             data = {names: []};
             expect(() => expansion.init(document, data)).to.not.throw();
         });
-        it("gets no mini expansion settings", function () {
+        it("can get an empty set of mini expansions", function () {
             document.querySelector("#capitol").checked = false;
-            expansion.init(document, data);
             const miniExpansions = expansion.getMinis(data, document);
             expect(miniExpansions).to.eql({});
         });
         it("gets mini expansions rules", function () {
             document.querySelector("#capitol").checked = true;
             document.querySelector("#capitolRules").checked = true;
-            expansion.init(document, data);
             const miniExpansions = expansion.getMinis(data, document);
             expect(miniExpansions).to.eql({
                 "capitol": "rules"
@@ -189,7 +174,6 @@ describe("Expansion", function () {
         });
     });
     describe("adds a mini expansion", function () {
-        // TODO tidy
         const fakeMini = {
             name: "Fake mini",
             id: "fakemini",
@@ -200,38 +184,30 @@ describe("Expansion", function () {
         it("adds a mini expansion", function () {
             expansion.init(document, data);
             expansion.addMini(fakeMini, data, document);
-            const fakeCount = document.querySelectorAll("#fakemini");
-            expect(fakeCount).to.have.lengthOf(1);
+            const mini = document.querySelector("#fakemini");
+            expect(mini).to.have.tagName("INPUT");
         });
         it("doesn't add multiple of the same mini expansion", function () {
             expansion.init(document, data);
-            if (document.querySelector("#fakemini")) {
-                document.querySelector("#fakemini").remove();
-            }
             expansion.addMini(fakeMini, data, document);
-            const mini = document.querySelectorAll("#fakemini");
-            expect(mini).to.have.lengthOf(1);
+            const minis = document.querySelectorAll("#fakemini");
+            expect(minis).to.have.lengthOf(1);
         });
     });
-    describe("checks if a names mini expansion odds come true", function () {
-        // TODO tidy
+    describe("mini expansion odds", function () {
         let cachedRandom;
         beforeEach(function () {
             cachedRandom = Math.random;
-            document.querySelectorAll(".expansions").forEach(
-                (el) => el.remove()
-            );
             data = boards.init(document, data);
             data = capitol.init(document, data);
             document.querySelector("#capitolOdds").checked = true;
-            document.querySelector("#capitolOddsOdds").value = "0";
         });
         afterEach(function () {
             Math.random = cachedRandom;
-            document.querySelector("#capitolOddsOdds").value = "50";
-            document.querySelector("#capitolRules").checked = true;
         });
         it("capitol odds of 0 result in false", function () {
+            Math.random = () => 1.00;
+            document.querySelector("#capitolOddsOdds").value = "0";
             const oddsResult = expansion.checkMiniOdds(data, "capitol");
             expect(oddsResult).to.equal(false);
         });
@@ -248,20 +224,19 @@ describe("Expansion", function () {
             expect(oddsResult).to.equal(false);
         });
         it("capitol odds of 100% gives true", function () {
+            Math.random = () => 0;
             document.querySelector("#capitolOddsOdds").value = "100";
             const oddsResult = expansion.checkMiniOdds(data, "capitol");
             expect(oddsResult).to.equal(true);
         });
     });
     describe("update", function () {
-        // TODO tidy
-        it("implements the update method", function () {
+        it("passes presentData through the update", function () {
             const presentData = expansion.update({test: "a test"});
             expect(presentData.test).to.eql("a test");
         });
     });
     describe("render", function () {
-        // TODO tidy
         it("passes viewData through the render", function () {
             let presentData = {test: "should not be seen"};
             let viewData = {test: "successful test"};
@@ -270,7 +245,6 @@ describe("Expansion", function () {
         });
     });
     describe("view", function () {
-        // TODO tidy
         it("passes viewData through the view", function () {
             let viewData = {test: "successful test"};
             viewData = expansion.view(viewData, data.fields);

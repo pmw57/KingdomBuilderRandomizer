@@ -75,7 +75,6 @@ describe("Goals", function () {
         });
     });
     describe("update", function () {
-        // TODO tidy
         let cacheShuffle;
         beforeEach(function () {
             // replace shuffle with reverse for reliable testing
@@ -88,7 +87,7 @@ describe("Goals", function () {
         it("adds goals to presentData", function () {
             let presentData = {};
             goals.update(data, presentData, document);
-            expect(presentData.goals).to.not.equal(undefined);
+            expect(presentData.goals).to.be.an("array");
         });
         it("gets three random goals from the active expansions", function () {
             const testGoals = JSON.stringify(data.contents.goals);
@@ -99,13 +98,13 @@ describe("Goals", function () {
             presentData = goals.update(data, presentData, document);
             const presentGoals = presentData.goals;
             const contentsGoals = data.contents.goals;
+            // using reverse instead of shuffle, for easier testing
             expect(presentGoals[0].name).to.eql(contentsGoals.base[3]);
             expect(presentGoals[1].name).to.eql(contentsGoals.base[2]);
             expect(presentGoals[2].name).to.eql(contentsGoals.base[1]);
         });
     });
     describe("goals presenter", function () {
-        // TODO tidy
         let goalsUpdate;
         beforeEach(function () {
             goalsUpdate = goals.update;
@@ -161,14 +160,12 @@ describe("Goals", function () {
         });
     });
     describe("render", function () {
-        // TODO tidy
         it("can render with no goal", function () {
             const presentData = {};
             goals.render(presentData, document);
         });
     });
     describe("view", function () {
-        // TODO tidy
         it("can view with no goal", function () {
             const viewData = {};
             goals.view(viewData, data.fields);

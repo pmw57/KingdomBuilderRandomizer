@@ -1,10 +1,8 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const expansion = require("../src/expansions/expansion.js");
 const cards = require("../src/cards.js");
 const boards = require("../src/boards.js");
-const nomads = require("../src/expansions/nomads.js");
 const presenter = require("../src/presenter.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
@@ -27,7 +25,7 @@ describe("Boards", function () {
         it("updates data.names", function () {
             expect(data).to.not.have.property("names");
             data = boards.init(document, data);
-            expect(data.names).includes("base");
+            expect(data.names).to.include("base");
         });
         it("adds boards HTML to the page", function () {
             expect(document.querySelector(".boards")).to.equal(null);
@@ -53,57 +51,10 @@ describe("Boards", function () {
             data = {};
             data = boards.init(document, data);
             const boardsField = data.fields.boards;
-            const parentName = boardsField.parentNode.constructor.name;
-            expect(parentName).to.equal("HTMLDivElement");
-        });
-    });
-    describe("expansion combinations", function () {
-        // TODO tidy
-        beforeEach(function () {
-            data = boards.init(document, data);
-            data = nomads.init(document, data);
-        });
-        it("defaults to base when no others are selected", function () {
-            document.querySelector("#base").checked = false;
-            document.querySelector("#nomads").checked = false;
-            let presentData = {};
-            presentData = boards.update(data, presentData, document);
-            expect(presentData.boards[3]).to.have.property("type", "base");
-        });
-        it("is base when base is selected", function () {
-            document.querySelector("#base").checked = true;
-            document.querySelector("#nomads").checked = false;
-            let presentData = {};
-            presentData = boards.update(data, presentData, document);
-            const initialTypes = presentData.boards.reduce(function (initialTypes, {type}) {
-                return initialTypes + type.substr(0, 1);
-            }, "");
-            expect(initialTypes).to.equal("bbbb");
-        });
-        it("nomads when nomads is selected", function () {
-            document.querySelector("#base").checked = false;
-            document.querySelector("#nomads").checked = true;
-            let presentData = {};
-            presentData = boards.update(data, presentData, document);
-            const initialTypes = presentData.boards.reduce(function (initialTypes, {type}) {
-                return initialTypes + type.substr(0, 1);
-            }, "");
-            expect(initialTypes).to.equal("nnnn");
-        });
-        it("is base and nomads when both are selected", function () {
-            document.querySelector("#base").checked = true;
-            document.querySelector("#nomads").checked = true;
-            let presentData = {};
-            presentData = boards.update(data, presentData, document);
-            presentData = nomads.update(data, presentData, document);
-            const initialTypes = presentData.boards.reduce(function (initialTypes, {type}) {
-                return initialTypes + type.substr(0, 1);
-            }, "");
-            expect(initialTypes).to.match(/^[bn]{4}$/);
+            expect(boardsField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {
-        // TODO tidy
         let cachedShuffle;
         beforeEach(function () {
             cachedShuffle = cards.shuffle;
@@ -115,7 +66,7 @@ describe("Boards", function () {
             data = boards.init(document, data);
             data.contents.boards.nomads = [];
             let presentData = {};
-            const badUpdate = () => boards.update(data, presentData);
+            const badUpdate = () => boards.update(data, presentData, undefined);
             expect(badUpdate).to.throw("Missing document");
         });
         it("selects four boards", function () {
@@ -128,9 +79,8 @@ describe("Boards", function () {
         it("selects four random different boards", function () {
             // Here, random is replaced with reverse
             cards.shuffle = shuffleTestStub;
-
-            let presentData = {};
             data = boards.init(document, data);
+            let presentData = {};
             presentData = boards.update(data, presentData, document);
             const boardList = presentData.boards;
             expect(boardList[0]).to.have.property("name", "Paddock");
@@ -143,10 +93,10 @@ describe("Boards", function () {
             data = boards.init(document, data);
             presentData = boards.update(data, presentData, document);
             const boardList = presentData.boards;
-            expect(boardList[0].flipped).not.equal(undefined);
-            expect(boardList[1].flipped).not.equal(undefined);
-            expect(boardList[2].flipped).not.equal(undefined);
-            expect(boardList[3].flipped).not.equal(undefined);
+            expect(typeof boardList[0].flipped).equal("boolean");
+            expect(typeof boardList[1].flipped).equal("boolean");
+            expect(typeof boardList[2].flipped).equal("boolean");
+            expect(typeof boardList[3].flipped).equal("boolean");
         });
         it("has the board type", function () {
             let presentData = {};
@@ -160,7 +110,6 @@ describe("Boards", function () {
         });
     });
     describe("boards presenter", function () {
-        // TODO tidy
         let cacheRandom;
         beforeEach(function () {
             cacheRandom = Math.random;
@@ -168,7 +117,7 @@ describe("Boards", function () {
         afterEach(function () {
             Math.random = cacheRandom;
         });
-        it("puts together presentation information for the boards", function () {
+        it("puts together presentation info for the boards", function () {
             data = {};
             data = boards.init(document, data);
             Math.random = () => 0;

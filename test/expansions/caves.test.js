@@ -67,11 +67,11 @@ describe("Caves", function () {
             data = {};
             data = boards.init(document, data);
             data = caves.init(document, data);
-            expect(data.fields.caves.parentNode).to.have.tagName("LI");
+            const cavesField = data.fields.caves;
+            expect(cavesField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {
-        // TODO tidy
         let cacheGetMinis;
         beforeEach(function () {
             cacheGetMinis = expansion.getMinis;
@@ -124,7 +124,6 @@ describe("Caves", function () {
         });
     });
     describe("presenter", function () {
-        // TODO tidy
         let cavesUpdate;
         beforeEach(function () {
             cavesUpdate = caves.update;
@@ -148,7 +147,6 @@ describe("Caves", function () {
         });
     });
     describe("render", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             const presentData = {
                 boards: [],
@@ -191,7 +189,6 @@ describe("Caves", function () {
         });
     });
     describe("view", function () {
-        // TODO tidy
         it("needs a boards section", function () {
             boards.init(document, data);
             document.querySelector(".boards").remove();

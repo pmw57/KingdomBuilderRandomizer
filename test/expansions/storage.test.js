@@ -32,20 +32,19 @@ describe("Storage", function () {
             ).to.throw("localStorage is not available");
         });
     });
-    describe("get", function () {
-        // TODO tidy
-        it("can get", function () {
-            expect(() => storage.get("testKey")).to.throw();
+    describe("set", function () {
+        it("can set", function () {
+            expect(() => storage.set("testKey")).to.not.throw();
         });
     });
-    describe("set", function () {
-        // TODO tidy
-        it("can set", function () {
-            expect(() => storage.set("testKey")).to.throw();
+    describe("get", function () {
+        it("throws error when key not found", function () {
+            storage.set("testKey", "test value");
+            const result = storage.get("testKey");
+            expect(result).to.equal("test value");
         });
     });
     describe("update", function () {
-        // TODO tidy
         it("throws an error when no storage", function () {
             storage.init({defaultView: {}});
             expect(() => storage.update()).to.throw("No storage");
@@ -81,7 +80,6 @@ describe("Storage", function () {
         });
     });
     describe("monitor", function () {
-        // TODO tidy
         let window;
         beforeEach(function () {
             window = document.defaultView;

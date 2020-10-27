@@ -23,9 +23,7 @@ describe("Random KB", function () {
     });
     it("can init", function () {
         const config = {};
-        expect(
-            () => randomKB.init(config, document)
-        ).to.not.throw();
+        expect(() => randomKB.init(config, document)).to.not.throw();
     });
     // TODO tidy
     it("loads an expansion", function () {

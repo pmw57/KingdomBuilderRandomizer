@@ -62,12 +62,10 @@ describe("Island", function () {
             data = boards.init(document, data);
             data = island.init(document, data);
             const islandField = data.fields.i0;
-            const parentName = islandField.parentNode.constructor.name;
-            expect(parentName).to.equal("HTMLDivElement");
+            expect(islandField.parentNode).to.not.equal(undefined);
         });
     });
     describe("is water board", function () {
-        // TODO tidy
         it("checks if board has water-based actions", function () {
             data = boards.init(document, data);
             data = island.init(document, data);
@@ -76,7 +74,6 @@ describe("Island", function () {
         });
     });
     describe("update when rules are active", function () {
-        // TODO tidy
         let presentData;
         let cacheRandom;
         beforeEach(function () {
@@ -89,16 +86,11 @@ describe("Island", function () {
             cacheRandom = Math.random;
             data = boards.init(document, data);
             data = island.init(document, data);
-            document.querySelector("#island").checked = true;
-            document.querySelector("#islandRules").checked = true;
         });
         afterEach(function () {
             Math.random = cacheRandom;
         });
         it("adds an island property to presentData", function () {
-            if (presentData.island) {
-                delete presentData.island;
-            }
             expect(presentData).to.not.have.property("island");
             presentData = island.update(data, presentData, document);
             expect(presentData).to.have.property("island");
@@ -119,12 +111,6 @@ describe("Island", function () {
             presentData = island.update(data, presentData, document);
             expect(presentData.island).to.have.property("useIsland", true);
         });
-        it("chooses flipped with a high random value", function () {
-            Math.random = () => 0.75;
-            data = island.init(document, data);
-            presentData = island.update(data, presentData, document);
-            expect(presentData.island).to.have.property("flipped", true);
-        });
         it("chooses unflipped with a low random value", function () {
             document.querySelector(".sidebar");
             Math.random = () => 0.25;
@@ -132,20 +118,18 @@ describe("Island", function () {
             presentData = island.update(data, presentData, document);
             expect(presentData.island).to.have.property("flipped", false);
         });
+        it("chooses flipped with a high random value", function () {
+            Math.random = () => 0.75;
+            data = island.init(document, data);
+            presentData = island.update(data, presentData, document);
+            expect(presentData.island).to.have.property("flipped", true);
+        });
     });
-    function resetIsland() {
-        if (document.querySelector("#island")) {
-            const islandListItem = document.querySelector("#island").parentNode;
-            islandListItem.parentNode.removeChild(islandListItem);
-        }
-    }
     describe("update when odds are active", function () {
-        // TODO tidy
         let presentData;
         let cacheRandom;
         beforeEach(function () {
             cacheRandom = Math.random;
-            resetIsland();
             presentData = {
                 boards: [
                     {name: "Board 1"},
@@ -154,40 +138,35 @@ describe("Island", function () {
             };
             data = boards.init(document, data);
             data = island.init(document, data);
+            document.querySelector("#islandOdds").checked = true;
         });
         afterEach(function () {
             Math.random = cacheRandom;
         });
         function checkUseIsland(value, random) {
-            document.querySelector("#islandOdds").checked = true;
             document.querySelector("#islandOddsOdds").value = value;
             Math.random = () => random;
             presentData = island.update(data, presentData, document);
             return presentData.island.useIsland;
         }
         it("with zero odds, no island is used", function () {
-            document.querySelector("#islandOdds").checked = true;
             const useIsland = checkUseIsland("0", 0.5);
             expect(useIsland).to.equal(false);
         });
         it("with full odds, uses island", function () {
-            document.querySelector("#islandOdds").checked = true;
             const useIsland = checkUseIsland("100", 0.5);
             expect(useIsland).to.equal(true);
         });
         it("with random low odds, doesn't use island", function () {
-            document.querySelector("#islandOdds").checked = true;
             const useIsland = checkUseIsland("25", 0.5);
             expect(useIsland).to.equal(false);
         });
         it("with random high odds, uses island", function () {
-            document.querySelector("#islandOdds").checked = true;
             const useIsland = checkUseIsland("75", 0.5);
             expect(useIsland).to.equal(true);
         });
     });
     describe("island presenter", function () {
-        // TODO tidy
         let islandUpdate;
         beforeEach(function () {
             islandUpdate = island.update;
@@ -239,7 +218,6 @@ describe("Island", function () {
         });
     });
     describe("view", function () {
-        // TODO tidy
         it("passes viewData through without changes", function () {
             boards.init(document, data);
             island.init(document, data);
