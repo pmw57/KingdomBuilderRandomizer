@@ -219,7 +219,7 @@ const expansion = (function () {
         }, {});
         return minis;
     }
-    function checkMiniOdds(data, id) {
+    function shouldUseMini(data, id) {
         function miniOdds(data, id) {
             const percentageChance = data.fields[id + "OddsOdds"].value;
             if (Number(percentageChance) === 0) {
@@ -248,7 +248,7 @@ const expansion = (function () {
         findExpansion,
         addMini,
         getMinis,
-        checkMiniOdds,
+        shouldUseMini,
         update: updateExpansion,
         render: renderExpansion,
         view: viewExpansion

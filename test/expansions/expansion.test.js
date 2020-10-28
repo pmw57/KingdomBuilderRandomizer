@@ -197,25 +197,25 @@ describe("Expansion", function () {
         it("capitol odds of 0 result in false", function () {
             Math.random = () => 1.00;
             document.querySelector("#capitolOddsOdds").value = "0";
-            const oddsResult = expansion.checkMiniOdds(data, "capitol");
+            const oddsResult = expansion.shouldUseMini(data, "capitol");
             expect(oddsResult).to.equal(false);
         });
         it("Math.random odds less than 50% are false", function () {
             Math.random = () => 0.49;
             document.querySelector("#capitolOddsOdds").value = "50";
-            const oddsResult = expansion.checkMiniOdds(data, "capitol");
+            const oddsResult = expansion.shouldUseMini(data, "capitol");
             expect(oddsResult).to.equal(true);
         });
         it("Math.random odds more than 50% are true", function () {
             Math.random = () => 0.51;
             document.querySelector("#capitolOddsOdds").value = "50";
-            const oddsResult = expansion.checkMiniOdds(data, "capitol");
+            const oddsResult = expansion.shouldUseMini(data, "capitol");
             expect(oddsResult).to.equal(false);
         });
         it("capitol odds of 100% gives true", function () {
             Math.random = () => 0;
             document.querySelector("#capitolOddsOdds").value = "100";
-            const oddsResult = expansion.checkMiniOdds(data, "capitol");
+            const oddsResult = expansion.shouldUseMini(data, "capitol");
             expect(oddsResult).to.equal(true);
         });
     });

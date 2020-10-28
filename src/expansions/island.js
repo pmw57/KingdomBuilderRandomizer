@@ -47,7 +47,7 @@ const island = (function () {
             );
         }
         function islandOdds(data) {
-            return expansion.checkMiniOdds(data, "island");
+            return expansion.shouldUseMini(data, "island");
         }
         presentData.island = {
             useIsland: false,

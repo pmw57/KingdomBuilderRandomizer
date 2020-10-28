@@ -46,7 +46,7 @@ const capitol = (function iife() {
             return boardData;
         }
         const capitolRules = useCapitolRules(data);
-        const capitolOdds = expansion.checkMiniOdds(data, "capitol");
+        const capitolOdds = expansion.shouldUseMini(data, "capitol");
         data.useCapitol = capitolRules || capitolOdds;
         presentData.boards = presentData.boards.map(function (boardData) {
             return updateCapitol(data, boardData);
