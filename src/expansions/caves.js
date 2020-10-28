@@ -53,9 +53,6 @@ const caves = (function iife() {
         return viewData;
     }
     function viewCaves(viewData, fields) {
-        if (!viewData.boards) {
-            throw new ReferenceError("Missing boards section");
-        }
         viewData.boards.forEach(function (boardData, i) {
             fields["board" + i].value = boardData.value + boardData.cave;
         });

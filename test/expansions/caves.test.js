@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const expansion = require("../../src/expansions/expansion.js");
 const caves = require("../../src/expansions/caves.js");
 const presenter = require("../../src/presenter.js");
 const jsdom = require("jsdom");
@@ -19,6 +18,9 @@ describe("Caves", function () {
             miniNames: ["capitol", "caves", "island"],
             mini: {
                 caves: ["Tavern"]
+            },
+            fields: {
+                cavesOddsOdds: {}
             }
         };
     });
@@ -57,18 +59,10 @@ describe("Caves", function () {
         });
     });
     describe("update", function () {
-        let cacheGetMinis;
-        beforeEach(function () {
-            cacheGetMinis = expansion.getMinis;
-        });
         afterEach(function () {
-            document.getElementById("cavesOddsOdds").value = "50";
-            expansion.getMinis = cacheGetMinis;
+            data.fields.cavesOddsOdds.value = "50";
         });
         it("doesn't use caves when no Tavern", function () {
-            expansion.getMinis = function () {
-                return {caves: "rules"};
-            };
             data = caves.init(document, data);
             let presentData = {
                 boards: [
@@ -79,11 +73,7 @@ describe("Caves", function () {
             expect(presentData.boards[0]).to.have.property("name");
             expect(presentData.boards[0]).to.not.have.property("cave");
         });
-        it("uses caves with the Tavern", function () {
-            expansion.getMinis = function () {
-                return {caves: "rules"};
-            };
-            data = caves.init(document, data);
+        it("uses caves with the Tavern", function () {            data = caves.init(document, data);
             let presentData = {
                 boards: [
                     {name: "Tavern"}
@@ -93,9 +83,6 @@ describe("Caves", function () {
             expect(presentData.boards[0]).to.have.property("cave", true);
         });
         it("the Oasis board doesn't have caves", function () {
-            expansion.getMinis = function () {
-                return {caves: "rules"};
-            };
             data = caves.init(document, data);
             let presentData = {
                 boards: [
