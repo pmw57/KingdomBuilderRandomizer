@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const expansion = require("../../src/expansions/expansion.js");
 const capitol = require("../../src/expansions/capitol.js");
 const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
@@ -138,14 +137,9 @@ describe("Capitol Unit tests", function () {
     });
     describe("When rules are used", function () {
         let data;
-        let cachedCheckMiniOdds;
         beforeEach(function () {
             data = {};
             data = addCapitol(data);
-            cachedCheckMiniOdds = expansion.checkMiniOdds;
-        });
-        afterEach(function () {
-            expansion.checkMiniOdds = cachedCheckMiniOdds;
         });
         it("Uses Capitol on Oracle, but not on Farm", function () {
             let presentData = createBoardList(["Farm", "Oracle"]);
@@ -160,7 +154,6 @@ describe("Capitol Unit tests", function () {
         let rulesField;
         let oddsField;
         let oddsOdds;
-        let cachedCheckMiniOdds;
         beforeEach(function () {
             data = {};
             data = addCapitol(data);
@@ -170,12 +163,8 @@ describe("Capitol Unit tests", function () {
             oddsField.checked = true;
             oddsOdds = data.fields.capitolOddsOdds;
             oddsOdds.value = "50";
-            cachedCheckMiniOdds = expansion.checkMiniOdds;
         });
-        afterEach(function () {
-            expansion.checkMiniOdds = cachedCheckMiniOdds;
-        });
-        it("with zero odds, doesn't use capitol", function () {
+        it("with low odds, doesn't use capitol", function () {
             oddsOdds.value = "0";
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
@@ -185,28 +174,8 @@ describe("Capitol Unit tests", function () {
             capitolData = boardsList[1].capitol;
             expect(capitolData).to.have.property("useCapitol", false);
         });
-        it("with low odds, doesn't use capitol", function () {
-            expansion.checkMiniOdds = () => false;
-            oddsOdds.value = "50";
-            let presentData = createBoardList(["Farm", "Oracle"]);
-            presentData = capitol.update(data, presentData, document);
-            const boardsList = presentData.boards;
-            expect(boardsList[0].capitol).to.have.property("useCapitol", false);
-            const capitolData = boardsList[1].capitol;
-            expect(capitolData).to.have.property("useCapitol", false);
-        });
         it("with high odds, uses the capitol", function () {
-            expansion.checkMiniOdds = () => true;
-            oddsOdds.value = "50";
-            let presentData = createBoardList(["Farm", "Oracle"]);
-            capitol.update(data, presentData, document);
-            const boardsList = presentData.boards;
-            expect(boardsList[0].capitol).to.have.property("useCapitol", false);
-            const capitolData = boardsList[1].capitol;
-            expect(capitolData).to.have.property("useCapitol", true);
-        });
-        it("with maximum, uses the capitol", function () {
-            expansion.checkMiniOdds = () => true;
+            oddsOdds.value = "100";
             let presentData = createBoardList(["Farm", "Oracle"]);
             presentData = capitol.update(data, presentData, document);
             const boardsList = presentData.boards;
