@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const boards = require("../../src/boards.js");
 const expansion = require("../../src/expansions/expansion.js");
 const caves = require("../../src/expansions/caves.js");
 const presenter = require("../../src/presenter.js");
@@ -26,12 +25,10 @@ describe("Caves", function () {
     describe("init", function () {
         it("passes data through the init", function () {
             data = {test: "successful test"};
-            data = boards.init(document, data);
             data = caves.init(document, data);
             expect(data).to.have.property("test", "successful test");
         });
         it("creates a sidebar during init", function () {
-            data = boards.init(document, data);
             expect(document.querySelector(".sidebar")).to.equal(null);
             data = caves.init(document, data);
             const sidebar = document.querySelector(".sidebar");
@@ -51,11 +48,9 @@ describe("Caves", function () {
         });
         it("has valid caves field after multiple inits", function () {
             data = {};
-            data = boards.init(document, data);
             data = caves.init(document, data);
             // innerHTML in second init used to ruin previous references
             data = {};
-            data = boards.init(document, data);
             data = caves.init(document, data);
             const cavesField = data.fields.caves;
             expect(cavesField.parentNode).to.not.equal(undefined);
@@ -179,16 +174,7 @@ describe("Caves", function () {
         });
     });
     describe("view", function () {
-        it("needs a boards section", function () {
-            boards.init(document, data);
-            document.querySelector(".boards").remove();
-            const viewData = {};
-            expect(
-                () => caves.view(viewData, data.fields)
-            ).to.throw("Missing boards section");
-        });
         it("passes viewData through the view method", function () {
-            boards.init(document, data);
             let viewData = {
                 boards: [],
                 test: "successful test"
@@ -197,14 +183,19 @@ describe("Caves", function () {
             expect(viewData).to.have.property("test", "successful test");
         });
         it("adds cave to a board", function () {
-            data = boards.init(document, data);
+            data.fields = {
+                board0: {},
+                board1: {},
+                board2: {},
+                board3: {}
+            };
             data = caves.init(document, data);
             let viewData = {
                 boards: [{value: "test board", cave: " (cave)"}],
                 test: "successful test"
             };
             viewData = caves.view(viewData, data.fields);
-            const board0 = document.querySelector("#b0");
+            const board0 = data.fields.board0;
             expect(board0).to.have.property("value", "test board (cave)");
         });
     });
