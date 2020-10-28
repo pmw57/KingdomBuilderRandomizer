@@ -2,7 +2,6 @@
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
 const caves = require("../../src/expansions/caves.js");
-const presenter = require("../../src/presenter.js");
 const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
 const {JSDOM} = jsdom;
@@ -73,7 +72,8 @@ describe("Caves", function () {
             expect(presentData.boards[0]).to.have.property("name");
             expect(presentData.boards[0]).to.not.have.property("cave");
         });
-        it("uses caves with the Tavern", function () {            data = caves.init(document, data);
+        it("uses caves with the Tavern", function () {
+            data = caves.init(document, data);
             let presentData = {
                 boards: [
                     {name: "Tavern"}
@@ -93,29 +93,6 @@ describe("Caves", function () {
             presentData = caves.update(data, presentData, document);
             expect(presentData.boards[0]).to.have.property("cave", true);
             expect(presentData.boards[1]).to.have.property("cave", false);
-        });
-    });
-    describe("presenter", function () {
-        let cavesUpdate;
-        beforeEach(function () {
-            cavesUpdate = caves.update;
-        });
-        afterEach(function () {
-            caves.update = cavesUpdate;
-        });
-        it("shows a cave", function () {
-            caves.update = function () {
-                return {
-                    boards: [
-                        {name: "cavestest", cave: true}
-                    ]
-                };
-            };
-            data = {};
-            const parts = [caves];
-            const presentData = presenter.update(data, parts);
-            expect(presentData.boards[0]).to.have.property("name", "cavestest");
-            expect(presentData.boards[0]).to.have.property("cave", true);
         });
     });
     describe("render", function () {
