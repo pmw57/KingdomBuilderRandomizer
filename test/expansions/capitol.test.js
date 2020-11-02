@@ -2,16 +2,9 @@
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
 const capitol = require("../../src/expansions/capitol.js");
-const jsdom = require("jsdom");
-const docpage = require("../docpage.html.js");
-const {JSDOM} = jsdom;
 
 describe("Capitol Unit tests", function () {
     "use strict";
-    let document;
-    beforeEach(function () {
-        document = new JSDOM(docpage).window.document;
-    });
     function createBoardList(boardList) {
         // removes the need to call boards.update() during test
         return {
@@ -20,68 +13,23 @@ describe("Capitol Unit tests", function () {
             })
         };
     }
+    function fakeCheckbox(id, checked) {
+        return {id, checked};
+    }
+    function fakeInput(id, value) {
+        return {id, value};
+    }
     function addCapitol(data) {
         data.mini = data.mini || {};
         data.mini.capitol = ["Oracle", "Harbor"];
         data.fields = data.fields || {};
-        const capitolCheckbox = document.createElement("input");
-        capitolCheckbox.id = "capitol";
-        capitolCheckbox.checked = true;
-        data.fields.capitol = capitolCheckbox;
-        const rulesCheckbox = document.createElement("input");
-        rulesCheckbox.id = "capitolRules";
-        rulesCheckbox.checked = true;
-        data.fields.capitolRules = rulesCheckbox;
-        const oddsChecked = document.createElement("input");
-        oddsChecked.id = "capitolRules";
-        oddsChecked.checked = false;
-        data.fields.capitolOdds = oddsChecked;
-        const oddsOdds = document.createElement("input");
-        rulesCheckbox.id = "capitolOddsOdds";
-        data.fields.capitolOddsOdds = oddsOdds;
+        data.fields.capitol = fakeCheckbox("capitol", true);
+        data.fields.capitolRules = fakeCheckbox("capitolRules", true);
+        data.fields.capitolOdds = fakeCheckbox("capitolOdds", false);
+        data.fields.capitolOddsOdds = fakeInput("capitolOddsOdds");
         data.fields.board0 = {value: ""};
         return data;
     }
-    describe("init", function () {
-        let data;
-        beforeEach(function () {
-            data = {
-                contents: {
-                    boards: {}
-                }
-            };
-            const content = document.createElement("div");
-            content.classList.add("content");
-            const boards = document.createElement("div");
-            boards.classList.add("boards");
-            document.body.appendChild(content);
-            content.appendChild(boards);
-        });
-        it("creates a sidebar during init", function () {
-            expect(document.querySelector(".sidebar")).to.equal(null);
-            data = capitol.init(document, data);
-            expect(document.querySelector(".sidebar")).to.have.tagName("DIV");
-        });
-        it("creates a capitol checkbox", function () {
-            data = capitol.init(document, data);
-            const capitolCheckbox = document.querySelector("#capitol");
-            expect(capitolCheckbox).to.have.property("checked", true);
-        });
-        it("can initializes when mini property isn't present", function () {
-            delete data.mini;
-            data = capitol.init(document, data);
-            expect(data.mini.capitol).is.an("array");
-        });
-        it("can init multiple times", function () {
-            data = capitol.init(document, data);
-            let capitolField = data.fields.capitol;
-            expect(capitolField.parentNode).to.not.equal(undefined);
-            // innerHTML in second init used to ruin previous references
-            data = capitol.init(document, data);
-            capitolField = data.fields.capitol;
-            expect(capitolField.parentNode).to.not.equal(undefined);
-        });
-    });
     describe("update", function () {
         let data;
         let cacheRandom;
@@ -95,31 +43,31 @@ describe("Capitol Unit tests", function () {
         });
         it("uses capitol input field", function () {
             let presentData = {boards: []};
-            capitol.update(data, presentData, document);
+            capitol.update(data, presentData);
         });
         it("Doesn't add a capitol when map has only one castle", function () {
             let presentData = createBoardList(["Farm"]);
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const capitolData = presentData.boards[0].capitol;
             expect(capitolData).to.have.property("useCapitol", false);
         });
         it("Adds a capitol to the Oracle board", function () {
             let presentData = createBoardList(["Oracle"]);
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const capitolData = presentData.boards[0].capitol;
             expect(capitolData).to.have.property("useCapitol", true);
         });
         it("uses a North direction when random is less than 0.5", function () {
             Math.random = () => 0;
             let presentData = createBoardList(["Oracle"]);
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const capitolData = presentData.boards[0].capitol;
             expect(capitolData).to.have.property("direction", "N");
         });
         it("uses a South direction when random is more than 0.5", function () {
             Math.random = () => 0.75;
             let presentData = createBoardList(["Oracle"]);
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const capitolData = presentData.boards[0].capitol;
             expect(capitolData).to.have.property("direction", "S");
         });
@@ -127,7 +75,7 @@ describe("Capitol Unit tests", function () {
             let presentData = createBoardList(
                 ["Oracle", "Farm", "Harbor", "Paddock"]
             );
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const boardList = presentData.boards;
             expect(boardList[0].capitol).to.have.property("useCapitol", true);
             expect(boardList[1].capitol).to.have.property("useCapitol", false);
@@ -143,7 +91,7 @@ describe("Capitol Unit tests", function () {
         });
         it("Uses Capitol on Oracle, but not on Farm", function () {
             let presentData = createBoardList(["Farm", "Oracle"]);
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const boardsList = presentData.boards;
             expect(boardsList[0].capitol).to.have.property("useCapitol", false);
             expect(boardsList[1].capitol).to.have.property("useCapitol", true);
@@ -167,7 +115,7 @@ describe("Capitol Unit tests", function () {
         it("with low odds, doesn't use capitol", function () {
             oddsOdds.value = "0";
             let presentData = createBoardList(["Farm", "Oracle"]);
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const boardsList = presentData.boards;
             let capitolData = boardsList[0].capitol;
             expect(capitolData).to.have.property("useCapitol", false);
@@ -177,7 +125,7 @@ describe("Capitol Unit tests", function () {
         it("with high odds, uses the capitol", function () {
             oddsOdds.value = "100";
             let presentData = createBoardList(["Farm", "Oracle"]);
-            presentData = capitol.update(data, presentData, document);
+            presentData = capitol.update(data, presentData);
             const boardsList = presentData.boards;
             expect(boardsList[0].capitol).to.have.property("useCapitol", false);
             const capitolData = boardsList[1].capitol;

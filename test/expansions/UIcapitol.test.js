@@ -1,5 +1,5 @@
 /*jslint node */
-const {describe, beforeEach, afterEach, it} = require("mocha");
+const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
 const boards = require("../../src/boards.js");
 const capitol = require("../../src/expansions/capitol.js");
@@ -7,16 +7,32 @@ const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
 const {JSDOM} = jsdom;
 
-describe("Capitol Integration Tests", function () {
+describe("Capitol UI tests", function () {
     "use strict";
     let document;
-    let cachedRandom;
     beforeEach(function () {
         document = new JSDOM(docpage).window.document;
-        cachedRandom = Math.random;
     });
-    afterEach(function () {
-        Math.random = cachedRandom;
+    describe("init", function () {
+        let data;
+        beforeEach(function () {
+            data = {
+                contents: {
+                    boards: {}
+                }
+            };
+        });
+        it("creates a sidebar during init", function () {
+            expect(document.querySelector(".sidebar")).to.equal(null);
+            data = capitol.init(document, data);
+            expect(document.querySelector(".sidebar")).to.have.tagName("DIV");
+        });
+        it("creates a capitol checkbox", function () {
+            expect(document.querySelector("#capitol")).to.equal(null);
+            data = capitol.init(document, data);
+            const capitolCheckbox = document.querySelector("#capitol");
+            expect(capitolCheckbox).to.have.property("checked", true);
+        });
     });
     describe("view", function () {
         it("adds capitol to the board", function () {
