@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const boards = require("../../src/boards.js");
 const crossroads = require("../../src/expansions/crossroads.js");
 const presenter = require("../../src/presenter.js");
 const jsdom = require("jsdom");
@@ -57,17 +56,6 @@ describe("Crossroads", function () {
             expect(document.querySelectorAll("#t1")).to.have.lengthOf(1);
             expect(document.querySelectorAll("#t2")).to.have.lengthOf(1);
             expect(document.querySelectorAll("#t3")).to.have.lengthOf(1);
-        });
-        it("doesn't ruin tasks when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = crossroads.init(document, data);
-            // innerHTML in second init used to ruin previous references
-            data = {};
-            data = boards.init(document, data);
-            data = crossroads.init(document, data);
-            const task0 = data.fields.task0;
-            expect(task0.parentNode).to.not.equal(undefined);
         });
         it("adds expansions section", function () {
             data = crossroads.init(document, data);

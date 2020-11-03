@@ -47,15 +47,6 @@ describe("Caves", function () {
             expect(cavesRules).to.have.property("checked", true);
             expect(cavesOdds).to.have.property("checked", false);
         });
-        it("has valid caves field after multiple inits", function () {
-            data = {};
-            data = caves.init(document, data);
-            // innerHTML in second init used to ruin previous references
-            data = {};
-            data = caves.init(document, data);
-            const cavesField = data.fields.caves;
-            expect(cavesField.parentNode).to.not.equal(undefined);
-        });
     });
     describe("update", function () {
         afterEach(function () {

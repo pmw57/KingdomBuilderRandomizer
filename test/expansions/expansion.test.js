@@ -75,17 +75,6 @@ describe("Expansion", function () {
             presentData = goals.update(data, presentData, document);
             expect(presentData.goals).to.have.lengthOf(3);
         });
-        it("doesn't ruin base when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = expansion.init(document, data);
-            // innerHTML in second init used to ruin previous references
-            data = {};
-            data = boards.init(document, data);
-            data = expansion.init(document, data);
-            const baseField = data.fields.base;
-            expect(baseField.parentNode).to.not.equal(undefined);
-        });
     });
     describe("update", function () {
         it("passes through playerData", function () {

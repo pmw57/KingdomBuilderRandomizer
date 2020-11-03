@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const boards = require("../../src/boards.js");
 const marshlands = require("../../src/expansions/marshlands.js");
 const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
@@ -38,17 +37,6 @@ describe("Marshlands", function () {
             expect(data.names).to.not.include("marshlands");
             data = marshlands.init(document, data);
             expect(data.names).to.include("marshlands");
-        });
-        it("doesn't ruin marshlands when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = marshlands.init(document, data);
-            // innerHTML in second init used to ruin previous references
-            data = {};
-            data = boards.init(document, data);
-            data = marshlands.init(document, data);
-            const checkboxField = data.fields.marshlands;
-            expect(checkboxField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {

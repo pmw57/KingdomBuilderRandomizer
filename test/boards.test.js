@@ -45,14 +45,6 @@ describe("Boards", function () {
             expect(document.querySelectorAll("#b2")).to.have.lengthOf(1);
             expect(document.querySelectorAll("#b3")).to.have.lengthOf(1);
         });
-        it("doesn't ruin boards when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = {};
-            data = boards.init(document, data);
-            const boardsField = data.fields.boards;
-            expect(boardsField.parentNode).to.not.equal(undefined);
-        });
     });
     describe("update", function () {
         let cachedShuffle;

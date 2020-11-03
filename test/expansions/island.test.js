@@ -45,17 +45,6 @@ describe("Island", function () {
             const islandCheckboxes = document.querySelectorAll("#i0");
             expect(islandCheckboxes).to.have.lengthOf(1);
         });
-        it("doesn't ruin island when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = island.init(document, data);
-            // innerHTML in second init used to ruin previous references
-            data = {};
-            data = boards.init(document, data);
-            data = island.init(document, data);
-            const islandField = data.fields.i0;
-            expect(islandField.parentNode).to.not.equal(undefined);
-        });
     });
     describe("is water board", function () {
         it("checks if board has water-based actions", function () {

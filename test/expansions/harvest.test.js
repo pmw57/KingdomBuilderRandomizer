@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const boards = require("../../src/boards.js");
 const harvest = require("../../src/expansions/harvest.js");
 const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
@@ -38,17 +37,6 @@ describe("Harvest", function () {
             expect(data.names).to.not.include("harvest");
             data = harvest.init(document, data);
             expect(data.names).to.include("harvest");
-        });
-        it("doesn't ruin harvest when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = harvest.init(document, data);
-            // innerHTML in second init used to ruin previous references
-            data = {};
-            data = boards.init(document, data);
-            data = harvest.init(document, data);
-            const harvestField = data.fields.harvest;
-            expect(harvestField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {

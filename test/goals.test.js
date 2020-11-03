@@ -35,17 +35,6 @@ describe("Goals", function () {
             data = goals.init(document, data);
             expect(data.contents).to.be.an("object");
         });
-        it("doesn't ruin goals when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = goals.init(document, data);
-            data = {};
-            data = boards.init(document, data);
-            data = goals.init(document, data);
-            const goalField = data.fields.goal0;
-            const parentName = goalField.parentNode.constructor.name;
-            expect(parentName).to.equal("HTMLDivElement");
-        });
         it("adds goals HTML to the page", function () {
             data = boards.init(document, data);
             expect(document.querySelector(".goals")).to.equal(null);

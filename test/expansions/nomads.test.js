@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").expect;
-const boards = require("../../src/boards.js");
 const nomads = require("../../src/expansions/nomads.js");
 const jsdom = require("jsdom");
 const docpage = require("../docpage.html.js");
@@ -45,17 +44,6 @@ describe("Nomads", function () {
             expect(data.contents.boards).to.not.have.property("nomads");
             data = nomads.init(document, data);
             expect(data.contents.boards.nomads).to.have.lengthOf(4);
-        });
-        it("doesn't ruin nomads when init'd multiple times", function () {
-            data = {};
-            data = boards.init(document, data);
-            data = nomads.init(document, data);
-            // innerHTML in second init used to ruin previous references
-            data = {};
-            data = boards.init(document, data);
-            data = nomads.init(document, data);
-            const nomadsField = data.fields.nomads;
-            expect(nomadsField.parentNode).to.not.equal(undefined);
         });
     });
     describe("update", function () {

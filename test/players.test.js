@@ -1,7 +1,6 @@
 /*jslint node */
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
-const boards = require("../src/boards.js");
 const players = require("../src/players.js");
 const jsdom = require("jsdom");
 const docpage = require("./docpage.html.js");
@@ -12,18 +11,6 @@ describe("Players", function () {
     let document;
     beforeEach(function () {
         document = new JSDOM(docpage).window.document;
-    });
-    describe("init", function () {
-        it("doesn't ruin playerCount when init'd multiple times", function () {
-            let data = {};
-            data = boards.init(document, data);
-            data = players.init(document, data);
-            data = {};
-            data = boards.init(document, data);
-            data = players.init(document, data);
-            const playerField = data.fields.playerCount;
-            expect(playerField.parentNode).to.not.equal(undefined);
-        });
     });
     describe("update", function () {
         let data;
