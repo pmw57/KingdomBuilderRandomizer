@@ -2,16 +2,11 @@
 const {describe, beforeEach, afterEach, it} = require("mocha");
 const expect = require("chai").use(require("chai-dom")).expect;
 const caves = require("../../src/expansions/caves.js");
-const jsdom = require("jsdom");
-const docpage = require("../docpage.html.js");
-const {JSDOM} = jsdom;
 
 describe("Caves", function () {
     "use strict";
-    let document;
     let data;
     beforeEach(function () {
-        document = new JSDOM(docpage).window.document;
         data = {
             names: ["base", "nomads"],
             miniNames: ["capitol", "caves", "island"],
@@ -23,37 +18,11 @@ describe("Caves", function () {
             }
         };
     });
-    describe("init", function () {
-        it("passes data through the init", function () {
-            data = {test: "successful test"};
-            data = caves.init(document, data);
-            expect(data).to.have.property("test", "successful test");
-        });
-        it("creates a sidebar during init", function () {
-            expect(document.querySelector(".sidebar")).to.equal(null);
-            data = caves.init(document, data);
-            const sidebar = document.querySelector(".sidebar");
-            expect(sidebar).to.have.tagName("DIV");
-        });
-        it("adds caves to mini property", function () {
-            data = {};
-            data = caves.init(document, data);
-            expect(data.mini).to.have.property("caves");
-        });
-        it("defaults to rules", function () {
-            data = caves.init(document, data);
-            const cavesRules = document.querySelector("#cavesRules");
-            const cavesOdds = document.querySelector("#cavesOdds");
-            expect(cavesRules).to.have.property("checked", true);
-            expect(cavesOdds).to.have.property("checked", false);
-        });
-    });
     describe("update", function () {
         afterEach(function () {
             data.fields.cavesOddsOdds.value = "50";
         });
         it("doesn't use caves when no Tavern", function () {
-            data = caves.init(document, data);
             let presentData = {
                 boards: [
                     {name: "Farm"}
@@ -64,7 +33,6 @@ describe("Caves", function () {
             expect(presentData.boards[0]).to.not.have.property("cave");
         });
         it("uses caves with the Tavern", function () {
-            data = caves.init(document, data);
             let presentData = {
                 boards: [
                     {name: "Tavern"}
@@ -74,14 +42,13 @@ describe("Caves", function () {
             expect(presentData.boards[0]).to.have.property("cave", true);
         });
         it("the Oasis board doesn't have caves", function () {
-            data = caves.init(document, data);
             let presentData = {
                 boards: [
                     {name: "Tavern"},
                     {name: "Oasis"}
                 ]
             };
-            presentData = caves.update(data, presentData, document);
+            presentData = caves.update(data, presentData);
             expect(presentData.boards[0]).to.have.property("cave", true);
             expect(presentData.boards[1]).to.have.property("cave", false);
         });
@@ -144,7 +111,6 @@ describe("Caves", function () {
                 board2: {},
                 board3: {}
             };
-            data = caves.init(document, data);
             let viewData = {
                 boards: [{value: "test board", cave: " (cave)"}],
                 test: "successful test"
